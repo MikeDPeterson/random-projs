@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "io.cordova.hello-cordova"
-        version   = "2.0.0">
-    <name>Hello Cordova</name>
+        id        = "com.mike.project01"
+        version   = "0.0.1">
+    <name>Mike's Project01</name>
 
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Mike's Project01 Project 
     </description>
 
     <author href="http://www.ccvonline.com" email="it@ccvonline.com">
@@ -38,9 +38,11 @@
     <gap:splash src="res/screen/iphone_retina_portrait.png"      width="640"  height="960"  gap:platform="ios" />
     <gap:splash src="res/screen/windows_phone_portrait.jpg"      width="480"  height="800"  gap:platform="winphone" />
 
-    <feature name="http://api.phonegap.com/1.0/device" />
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+    <feature name="http://api.phonegap.com/1.0/network"/>
+    <feature name="http://api.phonegap.com/1.0/notification"/>
 
-    <preference name="phonegap-version" value="2.4.0" />
+    <preference name="phonegap-version" value="2.3.0" />
     <preference name="orientation"      value="default" />
     <preference name="target-device"    value="universal" />
     <preference name="fullscreen"       value="false" />
