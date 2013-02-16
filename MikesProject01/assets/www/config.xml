@@ -2,7 +2,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.mike.project01"
-        version   = "0.0.1">
+        version   = "0.0.2">
     <name>Mike's Project01</name>
 
     <description>
@@ -12,6 +12,8 @@
     <author href="http://www.ccvonline.com" email="it@ccvonline.com">
         Christ's Church of the Valley - Creative Technologies Department
     </author>
+    
+    <access uri="*" subdomains="true" />
 
     <icon src="res/icon/cordova_512.png"        width="512" height="512" />
     <icon src="res/icon/cordova_android_96.png" width="96"  height="96"  gap:platform="android" />
@@ -42,7 +44,7 @@
     <feature name="http://api.phonegap.com/1.0/network"/>
     <feature name="http://api.phonegap.com/1.0/notification"/>
 
-    <preference name="phonegap-version" value="2.3.0" />
+    <preference name="phonegap-version" value="2.3.0" /> 
     <preference name="orientation"      value="default" />
     <preference name="target-device"    value="universal" />
     <preference name="fullscreen"       value="false" />
