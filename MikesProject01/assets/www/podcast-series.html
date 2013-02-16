@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            </head>
+    <body>
+        
+	    <div data-role="page" id="podcast-series">
+
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				<div data-role="controlgroup" class="ui-btn-right" data-type="horizontal">
+					<a href="homepage.html"  data-role="button" data-icon="home" >Home</a>
+				</div>
+			</div>
+			
+			<script>
+				var currentSermonId = -1;
+			</script>
+			
+			<div id="content" class="ui-content" data-role="content" role="main">	
+				<div id="ui-wrap" style="display: none;">
+					<div class="feedTopicView">
+						
+						<div id="highlight-item">
+								<h1>This Week's Message</h1>
+								
+									<div class="list-details group">
+										<div class="heading group">
+											<img class="note-this-week-image">
+											<div class="summary">
+												<h3 class="ui-li-heading">Heading</h3>
+												<p class="ui-li-desc date">Date</p>
+												<p class="ui-li-desc speaker">Speaker</p>
+											</div>
+											
+											<div class="note-button">
+												<a href="podcast-detail.html" onClick="sessionStorage.sermonId=currentSermonId;" data-role="button" >Watch</a>
+											</div>
+											
+										</div>
+										<div class="description">Desc</div>
+									</div>
+									
+									
+									
+								</div>
+	
+						<ul id="previous-series-list" class="ui-listview" data-theme="a" data-inset="true" data-role="listview" data-divider-theme="a">
+	                    	<li data-role="list-divider">Previous Sermon Series</li>
+	
+	                    <ul>
+	                    
+	                    
+					</div>                
+                </div>
+                
+                
+                
+                <div id="ui-error" style="display: none;">
+	                    Could not retrieve content from the CCV servers.  Please ensure you have a connection to the Internet or try
+	                    back later.
+	            </div>
+			</div>
+			
+			
+            
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+			<script>
+				
+				var lastRefresh = null;
+				
+				$("#podcast-series").live('pageshow',function() {
+			       
+			       LocalyticsPlugin.tagScreen("Podcast Series");
+			       
+			       // add campus phone to footer
+			       setCampusPhone();
+			       
+			       var errorOccurred = false;
+			       channelXmlData = getChannelData();
+			       
+			       if (channelXmlData == null) {
+				       errorOccurred = true;
+			       } else {
+				       
+				       // load data into screen
+				       
+				       // fill in highlight item
+				       $('item[video-item="True"]', channelXmlData).each(function(){		    	
+					    	$('.list-details h3.ui-li-heading').text( $(this).attr('sermon-name') );
+					    	$('.list-details p.ui-li-desc.date').text( $(this).attr('date') );
+					    	$('.list-details p.ui-li-desc.speaker').text( $(this).attr('speaker') );
+					    	$('.list-details div.description').text( $(this).find('description').text() );
+					    	
+					    	// get parent
+					    	var parentNode = $(this).parent();
+					    	$('.list-details img').attr("src",$(parentNode).attr('image-url'));
+					    	
+					    	currentSermonId = $(this).attr('id');
+					    });
+					    
+					    // clear series list
+					    $('#previous-series-list li').remove();
+					    $('#previous-series-list').listview( 'refresh', true);
+						
+					    // add heading
+					    $('#previous-series-list').append('<li data-role="list-divider">Previous Sermon Series</li>');
+					    
+					    // fill in series list view
+					    $(channelXmlData).find('topic').each(function(){				    	
+					    	$('#previous-series-list')
+                    		.append('<li>\n<a href="podcast-series-sermons.html" onClick="sessionStorage.seriesId=' + $(this).attr('id') + ';">\n<img src="' + $(this).attr('image2-url') +  ' "><h3 class="ui-li-heading">' + $(this).attr('title') + '</h3>\n<p class="ui-li-desc">' + $(this).attr('start-date') + ' - ' + $(this).attr('end-date') + '</p>\n</a>\n</li>');
+                    	
+					    });
+					    
+					    // refresh grid
+					    $('#previous-series-list').listview( 'refresh', true);
+			       }
+			       					
+					if (!errorOccurred) {
+						$('#ui-wrap').show();
+						//$('#ui-wrap').fadeIn('fast');
+						$('#ui-error').hide();
+					} else {
+						$('#ui-wrap').hide();
+						$('#ui-error').fadeIn('fast');						
+					}
+			       
+			    });
+				
+		</script>
+
+			
+		</div>
+
+    </body>
+</html>

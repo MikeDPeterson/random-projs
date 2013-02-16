@@ -1,0 +1,367 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<div data-role="page" id="group-map">
+			
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				<div data-role="controlgroup" class="ui-btn-right" data-type="horizontal">
+					<a href="homepage.html"  data-role="button" data-icon="home" >Home</a>
+				</div>
+			</div>
+			
+			<div id="content" class="ui-content" data-role="content" role="main">	
+				
+				<div class="show-address">
+					<h1>Group Finder</h1>
+		            	
+		            					
+					<div class="content-wrap about-groups group">
+						<h1>About Neighborhood Groups</h1>
+
+						<img src="./assets/images/ng-house.png">CCV neighborhoods are a vital part of our mission, but it starts with you. Discover how your Neighborhood Group is a crucial component to helping you develop and make an impact in your community. By becoming involved within your neighborhood, you will connect with neighbors, build new friendships and serve the community. Life was not meant to be lived alone. Take this step to make life more than you thought it could be.
+
+					</div>
+					
+					<div class="content-wrap address-wrap group-wrap group-location group">
+		            	<h1>Search For Groups Near You</h1>
+		            	
+		            	<p>Please tell us where you live so we can find the groups closest to your location.  This information will not be stored in any way.</p>
+		            		            	
+		            	<div class="search-type">
+		            		<a id="map-current-location" class="group-search-type" data-theme="a" href="" data-role="button" data-icon="star">Use Current Location</a>
+		            		<a id="search-using-address" class="group-search-type" href="" data-theme="a" data-role="button" data-icon="search">Search Using Address</a>
+		            		
+		            	</div>
+		            	
+		            	<div class="address-search-form" style="display: none;">
+			            	<form action="" method="post">
+			            		
+			            		<input id="address" name="address" type="text" placeholder="Address">	
+			
+			            		<input id="city" name="city" type="text" placeholder="City">	
+			
+			            		<span class="state">, AZ </span>
+			
+			            		<input id="zipcode" type="text" pattern="[0-9]*" name="zipcode" type="text" placeholder="Zip">	
+			            		<p>
+			            		<a id="map-address" href="" data-theme="a" data-role="button" data-icon="search">Search for Groups</a>
+			            	</form>
+		            	</div>
+		            	
+		            	<br>&nbsp; 
+		            	<p class="location-busy">
+		            		<img src="assets/images/ajax-loader-gray.gif">  
+		            	</p>                   
+					</div>
+				</div>
+				
+				<div class="show-map" style="display: none;">
+					<h1>Closest Groups To Your Location</h1>
+		            	
+		            <p>Below are the closest groups found to the location you provided.</p>
+		            
+					<div class="map-wrap">
+						<div id="map-canvas"></div>
+					</div>
+					
+					
+					<ul id="group-list" class="ui-listview" data-theme="a" data-inset="true" data-role="listview" data-divider-theme="a">
+	                    <li data-role="list-divider">Groups In Your Area</li>
+	
+	                    
+	                <ul>
+				
+				</div>
+				
+				
+
+			</div>
+			
+			<script>
+				
+				$('#search-using-address').click(function (event) {
+					$('div.search-type').slideUp('slow', function() {
+						$('div.address-search-form').slideDown('slow');
+					});
+				});
+				
+				//function below is a hack to fix the header resize bug on orientation change
+				// not currently working
+				window.onorientationchange = function()
+				{
+					 console.log("Scroll location: " + window.scrollY );
+					 window.scrollBy(0,1)
+	
+				};
+				
+				
+				$("#group-map").live('pageshow',function() {
+			       LocalyticsPlugin.tagScreen("Group Finder");
+			       
+			       // add campus phone to footer
+			       setCampusPhone();
+			       
+			       // reset the page on re-entry
+			       $('.show-address').show();
+			       $('.show-map').hide();
+			    });
+				
+				$('#map-address').click(function (event) {
+  										
+  					var zipcode = $.trim($('#zipcode').val());
+  					var address = $.trim($('#address').val());
+  					var city = $.trim($('#city').val());
+  					
+  					 
+  					
+  					// check that fields are valid
+  					var validFields = true;
+  					
+  					if (address.length == 0 || city.length == 0 || zipcode.length == 0) {
+	  					validFields = false;
+  					}
+
+  					if (!$.isNumeric(zipcode)) {
+	  					validFields = false;
+  					}
+  					 
+  					if (validFields) {
+	  					var requestUrl = URL_GROUP_FINDER + '?address=' + escape(address) + '&city=' + escape(city) + '&state=AZ&zip=' + zipcode;
+	  					
+	  					// show page loading
+	  					$('.location-busy').slideToggle('slow', function() {
+		  					requestGroups(requestUrl);
+    					});
+	  					
+  					} else {
+	  					navigator.notification.alert("Please provide a valid address.", alertDismissed, 'Warning', 'Continue');
+  					}
+  					
+  					e.prevendDefault();
+
+				});	
+				
+				
+				$('#map-current-location').click(function (e) {
+  					navigator.geolocation.getCurrentPosition(onLocateSuccess, onLocateError);
+  					e.prevendDefault();
+				});	
+				
+				var onLocateSuccess = function(position) {
+				    
+				    // log event with analytics
+					var analyticsParms = {
+					  "location" : position.coords.latitude + "," + position.coords.longitude 
+					};
+					
+					LocalyticsPlugin.tagEvent("Locate GPS Success", analyticsParms);
+				    
+				    var requestUrl = URL_GROUP_FINDER + '?latitude=' + position.coords.latitude + '&longitude=' + position.coords.longitude;
+				    
+				    // show page loading
+					$('.location-busy').slideToggle('slow', function() {
+		  					requestGroups(requestUrl);
+    				});
+				};
+				
+				function requestGroups(requestUrl) {
+
+					
+					
+					$.ajax({
+					    type: 'GET',
+					    url: requestUrl,
+					    async: false,
+					    dataType: 'xml',
+					    error: function(xhr, status, error) {
+							navigator.notification.alert("An error occurred trying to retrieve data from the CCV server.  Please ensure you have a connection to the Internet.", alertDismissed, 'Ooops...', 'Continue');
+						},
+					    success: function(xml) {
+					    	groups = [];
+
+					    	// ensure that no errors were returned
+					    	var errorMessage = '';
+					    	$(xml).find('error').each(function(){
+					    		errorMessage = $(this).text();
+					    	});
+					    	
+					    	if (errorMessage == 'Lat/Long is ouside all area boundaries') {
+						    	navigator.notification.alert("Your current location appears to be outside our current group boundaries.", alertDismissed, 'No groups available', 'Continue');
+					    	
+						    	// log event with analytics
+								LocalyticsPlugin.tagEvent("Locate Out Of Bounds", null);
+					    	
+					    	}
+					    	else if (errorMessage != '') {
+						    	navigator.notification.alert("An error occurred while searching for groups.  Please try again later.", alertDismissed, 'Ooops', 'Continue');
+					    	}
+					    	else {
+					    		// no errors
+						    	// neighborhood info
+
+						    							    	
+						    	$('.show-address').fadeToggle('slow', function() {
+						    	
+							    	$(xml).find('groups').each(function(){
+					                    groupSearchLatitude = $(this).attr('latitude');
+					                    groupSearchLongitude = $(this).attr('longitude');
+					                    groupNeighborhood = $(this).attr('neighborhood');
+					                    
+					                     // log event with analytics
+										var analyticsParms = {
+										  "neighborhood" : $(this).attr('neighborhood'),
+										  "location" : $(this).attr('latitude') + "," + $(this).attr('longitude')
+										};
+									    
+									    LocalyticsPlugin.tagEvent("Locate Groups Search", analyticsParms);
+					                    
+					                    var $groups = $('group', this);
+					                    $groups.each(function(){
+						                	groups.push(new Group($(this).attr('id'), $(this).attr('group-name'), $(this).attr('leader-name'), $(this).attr('meeting-day'), $(this).attr('latitude'), $(this).attr('longitude'), $(this).attr('distance'), $(this).attr('average-age'), $(this).attr('size')   ));
+						                });
+					                    
+									});
+	
+									$('.show-map').fadeToggle('slow');
+							    	initializeMap();
+						    	
+						    	 });	
+					    	}					    	
+						      
+					    }
+					});
+					
+					// hide page loading
+					$('.location-busy').slideToggle();
+					
+				}
+				
+				function onLocateError(error) {
+				    navigator.notification.alert("The application could not determine your current location. Please try entering your address.", alertDismissed, 'Warning', 'Continue');
+				    console.log('[Group Finder]Error on location: ' + error.code + ' Message: ' + error.message);
+				    
+				    // log event with analytics
+					var analyticsParms = {
+					  "error" : error.message
+					};
+				    
+				    LocalyticsPlugin.tagEvent("Locate GPS Failure", analyticsParms);
+				}
+
+				function initializeMap() {
+			        var iterator = 0;
+			        
+			        var myOptions = {
+			          center: new google.maps.LatLng(groupSearchLatitude, groupSearchLongitude),
+			          zoom: 14,
+			          disableDefaultUI: true,
+
+			          mapTypeId: google.maps.MapTypeId.ROADMAP
+			        };
+			        var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+			        
+			        var home = new google.maps.LatLng(groupSearchLatitude, groupSearchLongitude);
+			        
+			        var infowindow = new google.maps.InfoWindow({		
+						});
+					
+									
+					// place icon for search point	
+					marker = new google.maps.Marker({
+					    map:map,
+					    icon: flagImage,
+						shadow: flagShadow,
+						shape: flagShape, 
+					    animation: google.maps.Animation.DROP,
+					    position: home
+					});
+					
+					// clear group list
+					$('#group-list li').remove();
+					$('#group-list').listview( 'refresh', true);
+					
+					var nearestGroup = true;
+					
+					// add returned groups
+					for (var i = 0; i < groups.length; i++) {
+						addGroup(i);
+						
+						var group = groups[i];
+						
+						// add row to list
+	                    if (nearestGroup) {
+	                    	$('#group-list')
+	                    		.append('<li data-role="list-divider">Nearest Group To Your Location</li>');
+	                    	
+	                    	$('#group-list')
+	                    		.append('<li data-icon="false" class="nearest-group">\n<div class="group-details"><h3 class="ui-li-heading">' + group.GroupName  + '</h3>\n<p class="ui-li-desc">Meets on: ' + group.MeetingDay + '</p>\n<p class="ui-li-desc">Distance from you: ' + group.Distance + ' miles</p></div><div class="group-actions"><a onClick="sessionStorage.groupId=' + group.Id + ';" href="group-register.html" class="group-register">Join Group</a></div><div style="clear: both;"></div>\n</li>');
+	                    	
+	                    	$('#group-list')
+	                    		.append('<li data-role="list-divider">Other Groups In Your Area</li>');
+	                    	
+	                    	nearestGroup = false;
+	                    } else {
+		                    $('#group-list')
+	                    		.append('<li data-icon="false">\n<div class="group-details"><h3 class="ui-li-heading">' + group.GroupName  + '</h3>\n<p class="ui-li-desc">Meets on: ' + group.MeetingDay + '</p>\n<p class="ui-li-desc">Distance from you: ' + group.Distance + ' miles</p></div><div class="group-actions"><a onClick="sessionStorage.groupId=' + group.Id + ';" href="group-register.html" class="group-register">Join Group</a></div><div style="clear: both;"></div>\n</li>');
+
+	                    }
+					}
+					
+					// refresh grid
+					$('#group-list').listview( 'refresh', true);
+												
+					
+					function addGroup(i) {
+						var group = groups[i];
+
+						var groupLatLng = new google.maps.LatLng(group.Latitude, group.Longitude);
+					    var marker = new google.maps.Marker({
+					        position: groupLatLng,
+					        map: map,
+					        icon: houseImage,
+							shadow: houseShadow,
+							shape: houseShape,
+							leader: group.LeaderName,
+							night: group.MeetingDay,
+							distance: group.Distance, 
+					    	animation: google.maps.Animation.DROP,
+					        title: group.GroupName,
+					        zIndex: i
+					    });
+					    
+					    google.maps.event.addListener(marker, 'click', function() {
+  							infowindow.setContent("<div class='leader'>" + this.title + "</div>" +
+  									"<div class='night'>Meets on: " + this.night + "</div>" + 
+  									"<div class='distance'>Distance from you: " + this.distance + "</div>");
+  							infowindow.open(map,marker);
+  						});
+					}	
+					
+					
+			   };
+			   
+			   
+			</script>
+            
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+
+		
+		
+		
+	</body>
+</html>

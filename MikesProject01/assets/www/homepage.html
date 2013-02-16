@@ -1,0 +1,172 @@
+<html>
+	<head>
+	</head>
+	
+	<body>
+		<div data-role="page" id="home">
+			
+			<script language="javascript">		    
+			    
+			    $("#home").on('pageshow',function() {
+			       	
+			       	LocalyticsPlugin.tagScreen("Home Screen");
+			       			       	
+			        // load the current campus
+			        currentCampus = localStorage.getItem("current-campus");
+			        console.log('[Core]Initialized current campus from home page to: ' + currentCampus);
+
+
+		        	// set our campus selector
+		        	var campusSelect = $('#campus-select');
+		        	campusSelect.val(currentCampus).attr('selected', true).siblings('option').removeAttr('selected');
+		        	campusSelect.selectmenu("refresh", true);
+		        	
+		        	
+		        	// highlight sermon notes block if it is Sun or Sat
+					var dayOfWeek = new Date().getDay();
+					
+					if (dayOfWeek == 0 || dayOfWeek == 6){
+						$('.block-sermon-note').addClass('highlight');
+					}
+					
+					// bind a click event to the podcast, notes, etc features to warn users if there is no network available
+					$('.network-required').click(function(e){
+						var networkState = navigator.network.connection.type;
+						if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
+							e.stopImmediatePropagation();
+							e.preventDefault();
+							navigator.notification.alert("An active connection to the Internet is required to use this feature.", alertDismissed, 'Connection Required', 'Back');
+						}
+					});
+
+					// get recent data
+					refreshFeature(true);
+					
+					// set campus phone number in footer
+					setCampusPhone();
+					
+					// setup campus changer
+					$("#campus-select").on("change", function() {
+				        
+				        // save selection
+				        var campusId = $('#campus-select').val();
+				        localStorage.setItem('current-campus', campusId);
+				        currentCampus = campusId;
+				        
+				        console.log('[Core]Changing campus to: ' + currentCampus);
+				        
+				        // set campus phone number in footer
+				        setCampusPhone();
+				        
+				        // change feature
+				        refreshFeature(false);      
+				    });
+				    
+				    // enable feature click
+				    $(".feature-image").click(function() {
+
+						if (adTitle != '') {
+	  						$.mobile.changePage( 'ad-detail.html', {transition: "pop"});
+	  					}
+	  					else {
+	  						return false;
+	  					}
+  					});
+
+			    });	    
+				
+				
+				
+		  	</script>
+			
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<img src="assets/images/ccv-logo.png" class="logo">
+
+				<div data-role="fieldcontain" style="position: absolute; top: 0; right: 0; margin: 2px 6px 0 0; padding: 0;">
+					<select name="campus-select" data-native-menu="true" id="campus-select" data-mini="true">
+						<option value="1">Peoria</option>
+						<option value="6">Scottsdale</option>
+						<option value="5">Surprise</option>
+					</select>
+				</div>
+			</div>
+			
+			
+			<div id="content" data-role="content">	
+				<!--<div class="feedTopicView">
+				
+				
+				</div>-->
+			
+			
+				<div class="feature">
+		        	<div class="feature-image"></div>
+		        </div>
+		        
+		        <div class="grid-container">
+		        	<a href="about-ccv.html" class="block-anchor">
+		        		<div class="grid-block">
+		        			<h2>About CCV</h2>
+		        			<div>Share the best of CCV with your friends, neighbors and co-workers.</div>
+		        		</div>
+		        	</a>
+		        	
+		        	<a href="http://www.ccvonline.com/Arena/default.aspx?page=14347&portal=5&from=MobileApp&version=1" rel="external" class="block-anchor network-required">
+			        	<div class="grid-block ">
+			        		<h2>Give</h2>
+			        		<div>Giving made simple and portable. </div>
+			        	</div>
+			        </a>
+			        
+			        <a href="notes-series.html" class="block-anchor network-required">
+			        	<div class="grid-block block-sermon-note">
+			        		<h2>Sermon Notes</h2>
+			        		<div>Take digital notes during service on your mobile device.</div>
+			        	</div>
+		        	</a>
+		        	
+		        	<a href="prayer.html" class="block-anchor">
+			        	<div class="grid-block">
+			        		<h2>Prayer</h2>
+			        		<div>Pray for others on the prayer wall or submit a prayer request for a need in the community.</div>
+			        	</div>
+			        </a>
+			        
+			        <a href="group-finder.html" class="block-anchor network-required">
+			        	<div class="grid-block">
+			        		<h2>Group Finder</h2>
+			        		<div>Find a neighborhood group near you with the CCV group finder.</div>
+			        	</div>
+			        </a>
+			        
+			        <a href="podcast-series.html" class="block-anchor network-required">
+			        	<div class="grid-block">
+			        		<h2>Podcasts</h2>
+			        		<div>Watch or listen to your favorite sermon from the comfort of your couch.</div>
+			        	</div>
+		        	</a>
+		        	
+		        </div>		        
+		        	
+			</div>
+
+			
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" rel="external" target="_webapp" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+		</div>		
+		
+		
+	</body>
+</html>

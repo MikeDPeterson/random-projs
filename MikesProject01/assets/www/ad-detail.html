@@ -1,0 +1,63 @@
+<html>
+	<head></head>
+	<body>
+		<div data-role="page" id="ad-details">
+		
+			<script>
+				
+			    $("#ad-details").on('pageshow',function() {
+			        LocalyticsPlugin.tagScreen("Ad Details");
+			       	$('#ad-title').text(adTitle);
+			       	$('#ad-detail').text(adDetail);
+			       	$('.feature-image').css('background-image', 'url(' + adHighlightImageUrl + ')');
+
+			       	if (adUrl != '') {
+			       		
+			       		// change host name from mobileapp.ccvonline.com to www.ccvonline.com
+			       		adUrl = adUrl.replace("mobileapp.ccvonline.com", "www.ccvonline.com");
+			       		$('#ad-more-info').attr("href", adUrl);
+			       	}
+			       	
+			       	// log event with analytics
+					var analyticsParms = {
+					  "title" : adTitle
+					};
+					
+					LocalyticsPlugin.tagEvent("Ad Detail", analyticsParms);
+			    });
+		  	</script>
+		  	
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				
+				<a href="homepage.html" data-rel="back" data-icon="back" class="ui-btn-right">Back</a>
+			</div>
+			<div data-role="content">
+				<div class="feature">
+		        	<div class="feature-image"></div>
+		        </div>
+				
+				<div class="content-wrap">
+					<h1 id="ad-title"></h1>
+					<div id="ad-detail"></div>
+					
+					<a href="#" id="ad-more-info" data-role="button" data-inline="true" data-icon="info" rel="external" data-theme="a">More Information</a>
+				</div>
+			</div>
+			
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	
+	</body>
+</html>

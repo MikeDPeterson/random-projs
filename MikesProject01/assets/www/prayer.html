@@ -1,0 +1,112 @@
+<html>
+	<head>
+	</head>
+	
+	<body>
+		<div data-role="page" id="prayer">
+		
+			<script language="javascript">
+				
+			    $("#prayer").live('pageshow',function() {
+			    	
+			    	LocalyticsPlugin.tagScreen("Prayer");
+			    	
+				    LocalyticsPlugin.tagEvent("Prayer Session", null);
+			    	
+			    	// add campus phone to footer
+			    	setCampusPhone();
+
+			    	
+			    	// bind a click event to the add prayer request to notify if there is not a network connection
+					$('#add-prayer').click(function(e){
+						var networkState = navigator.network.connection.type;
+						if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
+							e.stopImmediatePropagation();
+							e.preventDefault();
+							navigator.notification.alert("An active connection to the Internet is required to use this feature.", alertDismissed, 'Connection Required', 'Back');
+						}
+					});
+			    	
+			    	
+			    	if (prayerRequests.length > 0) {
+				    	
+				    	for (var i in prayerRequests) {
+				    		
+				    		var request = prayerRequests[i];
+				    	
+				    		// add request to list
+		                    $('#prayer-list')
+		                    	.append('<li class="prayer"><div class="details"><h3>' + request.Name  + '</h3><p>' + request.Date + '</p>' + request.Request + '</div><div class="prayed"><a href="http://www.jonedmiston.com" data-id="' + request.Id  + '" class="prayed-button">Pray</a></div><div style="clear: both;"></div></li>')
+		                    	.listview( 'refresh', true);
+				    	}
+			    	}
+			    	else {
+			    		// add error message to list
+	                    $('#prayer-list')
+	                    	.append('<li class="prayer"><div class="details"><h3>No Prayer Requests</h3><p>Please ensure you have a working connection to the Internet, otherwise please try again soon.</p></div><div style="clear: both;"></div></li>')
+	                    	.listview( 'refresh', true);
+			    	}
+			    	
+			    	
+			    				    	
+			    });
+			    
+			    
+			    $('a.prayed-button').live("click", function (e) {
+  						$(this).addClass('complete');
+  						$(this).text('Complete');
+  						
+  						var anchor = URL_PRAYER_ACTIVITY + '?R=' + $(this).attr('data-id');
+  						
+  						
+  						// if network connection increment prayer counter
+  						var networkState = navigator.network.connection.type;
+  						if (networkState != Connection.NONE && networkState != Connection.UNKNOWN) {
+  							$.ajax({
+  								url: anchor
+  							});
+  						}
+  						
+  						e.preventDefault();
+  						
+				});
+			    
+			</script>
+		
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				<div data-role="controlgroup" class="ui-btn-right" data-type="horizontal">
+					<a href="homepage.html"  data-role="button" data-icon="home" >Home</a>
+				</div>
+			</div>
+			<div data-role="content">
+		        
+		        <div class="prayer-header group">
+		        	<h1>Current Prayer Requests</h1>
+		        
+		        	<a href="prayer-add-request.html" id="add-prayer" data-theme="a" data-icon="plus" data-role="button">Submit Prayer Request</a>
+		        </div> 
+		                
+		        <ul id="prayer-list" data-role="listview" data-inset="true" data-split-theme="d">
+		        	
+		        </ul>
+		        
+			</div>
+			
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+		</div>
+	</body>
+</html>
