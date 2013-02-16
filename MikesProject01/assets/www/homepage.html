@@ -31,7 +31,7 @@
 					}
 					
 					// bind a click event to the podcast, notes, etc features to warn users if there is no network available
-					$('.network-required').click(function(e){
+					$('.network-required').click(function (e) {
 						var networkState = navigator.network.connection.type;
 						if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
 							e.stopImmediatePropagation();
@@ -126,7 +126,9 @@
 			        	</div>
 		        	</a>
 		        	
-		        	<a href="#" onclick="javascript: $.mobile.changePage('notes-series.html', { transition: 'fade'});">sermon notes link jqmobile</a>
+                    <button title="sermon notes button" onclick="javascript: $.mobile.changePage('notes-series.html', { transition: 'fade'});">SermonNotesButton</button>
+
+		        	<a onclick="javascript: $.mobile.changePage('notes-series.html', { transition: 'fade'});">sermon notes link jqmobile</a>
 
                     <a href="#" onclick="javascript: $.mobile.changePage('prayer.html', { transition: 'fade'});">prayer link jqmobile</a>
                      
