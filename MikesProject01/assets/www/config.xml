@@ -13,7 +13,7 @@
         Christ's Church of the Valley - Creative Technologies Department
     </author>
     
-    <access uri="*" subdomains="true" />
+    <access origin="*" />
 
     <icon src="res/icon/cordova_512.png"        width="512" height="512" />
     <icon src="res/icon/cordova_android_96.png" width="96"  height="96"  gap:platform="android" />
@@ -40,9 +40,14 @@
     <gap:splash src="res/screen/iphone_retina_portrait.png"      width="640"  height="960"  gap:platform="ios" />
     <gap:splash src="res/screen/windows_phone_portrait.jpg"      width="480"  height="800"  gap:platform="winphone" />
 
-    <feature name="http://api.phonegap.com/1.0/geolocation"/>
-    <feature name="http://api.phonegap.com/1.0/network"/>
-    <feature name="http://api.phonegap.com/1.0/notification"/>
+    <feature name="http://api.phonegap.com/1.0/battery"/>
+	<feature name="http://api.phonegap.com/1.0/camera"/>
+	<feature name="http://api.phonegap.com/1.0/contacts"/>
+	<feature name="http://api.phonegap.com/1.0/file"/>
+	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://api.phonegap.com/1.0/media"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	<feature name="http://api.phonegap.com/1.0/notification"/>
 
     <preference name="phonegap-version" value="2.3.0" /> 
     <preference name="orientation"      value="default" />
