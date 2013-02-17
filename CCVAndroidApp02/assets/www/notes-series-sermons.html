@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            </head>
+    <body>
+        
+	    <div data-role="page" id="notes-series-sermons">
+
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				<div data-role="controlgroup" class="ui-btn-right" data-type="horizontal">
+					<a href="homepage.html"  data-role="button" data-icon="home" >Home</a>
+					<a href="index.html"  data-role="button" data-rel="back" data-icon="back" >Back</a>
+				</div>
+			</div>
+			
+			<div id="content" class="ui-content" data-role="content" role="main">	
+				
+				<div class="feedTopicView">
+					
+					<div id="ui-wrap" style="display: none;">
+						<div id="highlight-item">
+								<h1>Series Overview</h1>
+								
+									<div class="list-details group">
+										<div class="heading group">
+											<img class="series-image" width="160" height="100">
+											<div class="summary">
+												<h3 class="ui-li-heading">Heading</h3>
+												<p class="ui-li-desc dates">Date</p>
+											</div>										
+										</div>
+										<div class="description">Desc</div>
+									</div>
+									
+									
+									
+								</div>
+	
+						<ul id="sermon-list" class="ui-listview" data-theme="a" data-inset="true" data-role="listview" data-divider-theme="a">
+	
+	                    </ul>
+	                    
+	                    
+					</div>    
+				</div>
+				
+				            
+                <div id="ui-error" style="display: none;">
+	                    Could not retrieve content from the CCV servers.  Please ensure you have a connection to the Internet or try
+	                    back later.
+	            </div>
+			</div>
+			
+			
+            
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+			<script>
+				
+				$("#notes-series-sermons").live('pageshow',function() {
+			       
+			       LocalyticsPlugin.tagScreen("Notes Series Sermon");
+			       
+			       	// set campus phone in footer
+			       setCampusPhone();
+			       	
+			        var errorOccurred = false;
+			       
+			       // load selected series
+				   var selectedSeriesId = sessionStorage.seriesId;
+			       
+			       // clear series list
+					$('#sermon-list li').remove();
+					$('#sermon-list').listview( 'refresh', true);
+					
+					// add heading
+					$('#sermon-list').append('<li data-role="list-divider">Sermons</li>');
+			       
+					var errorOccurred = false;
+					channelXmlData = getChannelData();
+			       
+					if (channelXmlData == null) {
+				       errorOccurred = true;
+				    } else {
+				    	// load data into screenLeft
+				    	
+				    	var seriesNode = $('topic[id="' + selectedSeriesId + '"]', channelXmlData);
+				    		
+			    		$('.list-details img').attr("src", $(seriesNode).attr('image-url'));		    	
+					    $('.list-details h3.ui-li-heading').text( $(seriesNode).attr('title') );
+					    $('.list-details p.ui-li-desc.dates').text( $(seriesNode).attr('start-date') + ' - ' +  $(seriesNode).attr('end-date'));
+					    $('.list-details div.description').text( $(seriesNode).find('description').first().text() );
+
+					    	
+				    	$(seriesNode).find('item').each(function(){				    	
+					    	$('#sermon-list')
+                    		.append('<li class="sermon-detail">\n<a href="notes-detail.html" onClick="sessionStorage.sermonId=' + $(this).attr('id') + ';">\n<img src="' + $(seriesNode).attr('image2-url') +  ' "><h3 class="ui-li-heading">' + $(this).attr('sermon-name') + '</h3>\n<p class="ui-li-desc">' + $(this).attr('speaker') + '</p><p class="ui-li-desc">' + $(this).attr('date') + '</p></a>\n</li>');
+                    	
+					    });
+					    
+					    // refresh grid
+					    $('#sermon-list').listview( 'refresh', true);
+				    }
+			       
+					
+					if (!errorOccurred) {
+						$('#ui-wrap').show();
+						//$('#ui-wrap').fadeIn('fast');
+						$('#ui-error').hide();
+					} else {
+						$('#ui-wrap').hide();
+						$('#ui-error').fadeIn('fast');						
+					}
+			       
+			    });
+
+		</script>
+
+			
+		</div>
+
+    </body>
+</html>

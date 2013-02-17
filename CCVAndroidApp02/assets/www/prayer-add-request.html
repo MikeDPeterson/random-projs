@@ -1,0 +1,166 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<div data-role="page" id="prayer-add-request">
+			
+			<script language="javascript">
+		
+				$("#prayer-add-request").live('pageshow',function() {
+			    	
+			    	LocalyticsPlugin.tagScreen("Prayer Add Request");
+			    	
+			    	// add campus phone to footer
+			    	setCampusPhone();
+			    	
+			    });
+				
+				$('#send-request').click(function (e) {
+  					
+  					// show working
+  					$('.location-busy').slideToggle();
+  										
+  					// get input fields
+  					var firstName = $.trim($('#first-name').val());
+  					var lastName = $.trim($('#last-name').val());
+  					var email = $.trim($('#email').val());
+  					var isPublic = $('#is-public').val();
+  					var category = $('#category').val();
+  					var request = $.trim($('#request').val());
+  					
+  					
+  					// check that fields are valid
+  					var validFields = true;
+  					
+  					if (request.length == 0 ) {
+	  					navigator.notification.alert("Please enter a prayer request.", alertDismissed, 'Warning', 'Continue');
+	  					e.prevendDefault();
+	  					return;
+  					}
+  					  					
+  					// if network connection increment submite request
+  					var anchor = encodeURI(URL_PRAYER_ADD_REQUEST + "?first-name=" + firstName + "&last-name=" + lastName +  "&email=" + email + "&is-public=" + isPublic + "&category=" + category + "&request=" + request);
+  					console.log('[Prayer]Submitting request via: ' + anchor);
+  		  		
+					var networkState = navigator.network.connection.type;
+					if (networkState != Connection.NONE && networkState != Connection.UNKNOWN) {
+						$.ajax({
+							url: anchor,
+							error: function(xhr, status, error) {
+								navigator.notification.alert("An error occurred trying to send your prayer request to the CCV server.", alertDismissed, 'Ooops...', 'Continue');
+							},
+							success: function(xml) {
+								navigator.notification.alert("Your prayer request has been added.", alertDismissed, 'Success', 'Continue');
+							
+								var analyticsParms = {
+								  "category" : $("#category option:selected").text(),
+								  "public" : isPublic
+								};
+							    
+							    LocalyticsPlugin.tagEvent("Prayer Submitted Request", analyticsParms);
+							
+					    		// hide page loading
+					    		$('.location-busy').slideToggle();		    				      
+					    	}
+						});
+					}
+  					
+  					e.prevendDefault();
+
+				});	
+
+			
+			</script>
+			
+			
+			<div data-position="fixed" data-role="header" data-tap-toggle="false">
+				<h1 class="logo"></h1>
+				<div data-role="controlgroup" class="ui-btn-right" data-type="horizontal">
+					<a href="homepage.html"  data-role="button" data-icon="home" >Home</a>
+					<a href="index.html"  data-role="button" data-rel="back" data-icon="back" >Back</a>
+				</div>
+			</div>
+			
+			<div id="content" class="ui-content" data-role="content" role="main">		
+				<h1>Add A Prayer Request</h1>
+				
+				
+				
+				<div class="content-wrap group">
+					<h2>Request Details</h2>
+					<input id="first-name" name="first-name" type="text" placeholder="First Name (optional)">
+					<input id="last-name" name="last-name" type="text" placeholder="Last Name (optional)">
+					<input id="email" name="email" type="text" placeholder="Email (optional)">
+					
+					
+					<div class="prayer-public-toggle" data-theme="c">
+						<select name="is-public" id="is-public"  data-role="slider">
+							<option value="true">Allow Public Prayers</option>
+							<option value="false">Private Request</option>
+						</select> 
+					</div>
+					
+					
+					<select name="category" data-theme="c"  id="category">
+					   <option value="655">Type of prayer...</option>
+					   <option value="655">General</option>
+					   <option value="646">Addictive Behavior</option>
+					   <option value="649">Comfort / Grief</option>
+					   <option value="650">Depression / Anxiety / Suicidal Ideations</option>
+					   <option value="988">Events</option>
+					   <option value="643">Family Issues</option>
+					   <option value="651">Finances / Job</option>
+					   <option value="644">God's Will</option>
+					   <option value="652">Healing</option>
+					   <option value="656">Life Transitions</option>
+					   <option value="645">Marriage / Relationship Problems</option>
+					   <option value="967">Missionary Support</option>
+					   <option value="653">Praise Report</option>
+					   <option value="2207">Prison Ministry</option>
+					   <option value="648">Salvation / Rededication</option>
+					   <option value="647">Spiritual Warfare</option>
+					   <option value="975">Staff Ministry</option>
+					   <option value="654">Travel</option>
+					   <option value="657">Youth</option>
+					</select>
+					
+						
+						
+					<div class="prayer-request-wrap">
+						<label for="request">Prayer Request:</label>
+						<textarea name="request" id="request"></textarea>
+					</div>
+
+
+					
+					<a id="send-request" href="" data-theme="a" data-role="button" data-icon="plus">Send Request</a>
+					
+					<p class="location-busy">
+		            	<img src="assets/images/ajax-loader-gray.gif">  
+		            </p>  
+					
+				</div>
+			</div>
+		
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="app-footer" class="ui-bar">
+				<div class="ui-grid-a">
+					<div class="right cell"><h6>Christ's Church of the Valley</h6></div>
+					<div class="left cell">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="tel:6233762444" class="campus-phone" data-role="button" data-mini="true">623.376.2444</a>
+							<a href="http://www.ccvonline.com" data-role="button" data-mini="true">Visit Our Website</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+		</div>
+		
+		
+		
+		
+	</body>
+</html>
