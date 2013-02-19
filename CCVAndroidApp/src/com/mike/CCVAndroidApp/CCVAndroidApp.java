@@ -17,12 +17,12 @@
        under the License.
  */
 
-package com.mike.CCVAndroidApp02;
+package com.mike.CCVAndroidApp;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
 
-public class CCVAndroidApp02 extends DroidGap
+public class CCVAndroidApp extends DroidGap
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
