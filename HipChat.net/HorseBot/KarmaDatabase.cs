@@ -8,22 +8,55 @@ using System.Threading.Tasks;
 
 namespace HorseBot
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [DataContract]
     public class KarmaPhraseStats
     {
+        /// <summary>
+        /// Gets or sets the phrase.
+        /// </summary>
+        /// <value>
+        /// The phrase.
+        /// </value>
         [DataMember]
         public string Phrase { get; set; }
 
+        /// <summary>
+        /// Gets or sets the inc count.
+        /// </summary>
+        /// <value>
+        /// The inc count.
+        /// </value>
         [DataMember]
         public int IncCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the dec count.
+        /// </summary>
+        /// <value>
+        /// The dec count.
+        /// </value>
         [DataMember]
         public int DecCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the last update.
+        /// </summary>
+        /// <value>
+        /// The last update.
+        /// </value>
         [DataMember]
         public DateTime LastUpdate { get; set; }
 
+        /// <summary>
+        /// Gets the score.
+        /// </summary>
+        /// <value>
+        /// The score.
+        /// </value>
         public int Score
         {
             get
@@ -32,6 +65,12 @@ namespace HorseBot
             }
         }
 
+        /// <summary>
+        /// Gets the score summary.
+        /// </summary>
+        /// <value>
+        /// The score summary.
+        /// </value>
         public string ScoreSummary
         {
             get
@@ -41,6 +80,9 @@ namespace HorseBot
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [DataContract]
     public class KarmaDatabase : List<KarmaPhraseStats>
@@ -55,9 +97,12 @@ namespace HorseBot
         /// </summary>
         public void Save()
         {
+            KarmaDatabase cleanedDB = new KarmaDatabase();
+            cleanedDB.AddRange(this.Where( a => !string.IsNullOrWhiteSpace( a.Phrase ) ));
+            cleanedDB.TrimExcess();
             DataContractSerializer s = new DataContractSerializer( this.GetType() );
             FileStream fs = new FileStream( fileName, FileMode.Create );
-            s.WriteObject( fs, this );
+            s.WriteObject( fs, cleanedDB );
             fs.Close();
         }
 
@@ -82,22 +127,24 @@ namespace HorseBot
         /// Incs the karma.
         /// </summary>
         /// <param name="phrase">The phrase.</param>
-        public void IncKarma( string phrase )
+        public static void IncKarma( string phrase )
         {
-            KarmaPhraseStats karmaPhraseStats = GetKarmaItemByPhrase( phrase );
+            var db = KarmaDatabase.Load();
+            KarmaPhraseStats karmaPhraseStats = db.GetKarmaItemByPhrase( phrase );
             karmaPhraseStats.IncCount++;
-            Save();
+            db.Save();
         }
 
         /// <summary>
         /// Decimals the karma.
         /// </summary>
         /// <param name="phrase">The phrase.</param>
-        public void DecKarma( string phrase )
+        public static void DecKarma( string phrase )
         {
-            KarmaPhraseStats karmaPhraseStats = GetKarmaItemByPhrase( phrase );
+            var db = KarmaDatabase.Load();
+            KarmaPhraseStats karmaPhraseStats = db.GetKarmaItemByPhrase( phrase );
             karmaPhraseStats.DecCount++;
-            Save();
+            db.Save();
         }
 
         /// <summary>
@@ -105,9 +152,10 @@ namespace HorseBot
         /// </summary>
         /// <param name="phrase">The phrase.</param>
         /// <returns></returns>
-        public string GetKarmaScoreSummary( string phrase )
+        public static string GetKarmaScoreSummary( string phrase )
         {
-            KarmaPhraseStats karmaPhraseStats = GetKarmaItemByPhrase( phrase );
+            var db = KarmaDatabase.Load();
+            KarmaPhraseStats karmaPhraseStats = db.GetKarmaItemByPhrase( phrase );
             return karmaPhraseStats.ScoreSummary;
         }
 
@@ -132,16 +180,24 @@ namespace HorseBot
 
             if ( File.Exists( fileName ) )
             {
-                FileStream fs = new FileStream( fileName, FileMode.OpenOrCreate );
                 try
                 {
-                    DataContractSerializer s = new DataContractSerializer( typeof( KarmaDatabase ) );
-                    _karmaDatabase = s.ReadObject( fs ) as KarmaDatabase;
-                    return _karmaDatabase;
+
+                    FileStream fs = new FileStream( fileName, FileMode.OpenOrCreate );
+                    try
+                    {
+                        DataContractSerializer s = new DataContractSerializer( typeof( KarmaDatabase ) );
+                        _karmaDatabase = s.ReadObject( fs ) as KarmaDatabase;
+                        return _karmaDatabase;
+                    }
+                    finally
+                    {
+                        fs.Close();
+                    }
                 }
-                finally
+                catch
                 {
-                    fs.Close();
+                    // just create a new one
                 }
             }
 

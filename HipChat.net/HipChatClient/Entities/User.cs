@@ -14,6 +14,14 @@ namespace HipChat.Entities
         [XmlElement(ElementName = "name")]
         public string Name { get; set; }
 
+        public string FirstName
+        {
+            get
+            {
+                return Name.Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries )[0];
+            }
+        }
+
         /// <summary>
         /// id of user
         /// </summary>

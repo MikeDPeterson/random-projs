@@ -10,6 +10,8 @@ namespace HipChat
     /// </summary>
     class HttpUtils
     {
+        public static int ApiCallCount { get; private set; }
+        
         /// <summary>
         /// Reads the entire contents of a web response stream and returns as a string.
         /// </summary>
@@ -37,6 +39,7 @@ namespace HipChat
         {
             try
             {
+                ApiCallCount++;
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     // in the case of a HipChat exception, the reason is in the response body, so need to extract this.

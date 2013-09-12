@@ -13,14 +13,8 @@ namespace HorseBot
     /// </summary>
     public enum MessageCategory
     {
-        /// <summary>
-        /// A join message
-        /// </summary>
         JoinMessage,
 
-        /// <summary>
-        /// A random answer
-        /// </summary>
         RandomAnswerWho,
 
         RandomAnswerWhatIs,
@@ -51,17 +45,23 @@ namespace HorseBot
 
         SpecificWhatTimeIsIt,
 
-        Quit,
-
         AddMessage,
 
         AddDefineResponse,
 
         GetDefineResponse,
 
-        KarmaChange,
+        KarmaInc,
+
+        KarmaDec,
 
         KarmaReport,
+
+        BotStats,
+
+        BotHelp,
+
+        BotQuit,
 
         Unknown
     }
@@ -127,9 +127,13 @@ namespace HorseBot
         /// </summary>
         public void Save()
         {
+            ResponseMessageDatabase cleanedDB = new ResponseMessageDatabase();
+            cleanedDB.AddRange( this.Where( a => !string.IsNullOrWhiteSpace( a.Message ) ).ToList() );
+            cleanedDB.TrimExcess();
+
             DataContractSerializer s = new DataContractSerializer( this.GetType() );
             FileStream fs = new FileStream( fileName, FileMode.Create );
-            s.WriteObject( fs, this );
+            s.WriteObject( fs, cleanedDB );
             fs.Close();
         }
 
@@ -138,13 +142,42 @@ namespace HorseBot
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public static bool HasSpecificPhrase( string message)
+        public static bool HasSpecificPhrase( string message )
         {
             var messageDatabase = ResponseMessageDatabase.Load();
             return messageDatabase
-                .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse)
+                .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse )
                 .Where( a => a.DefineResponseSpecificPhrase != null )
-                .Any(a => a.DefineResponseSpecificPhrase.Equals(message, StringComparison.OrdinalIgnoreCase));
+                .Any( a => a.DefineResponseSpecificPhrase.Equals( message, StringComparison.OrdinalIgnoreCase ) );
+        }
+
+        /// <summary>
+        /// Adds the message.
+        /// </summary>
+        /// <param name="messageCategory">The message category.</param>
+        /// <param name="responseMessage">The response message.</param>
+        /// <param name="specificPhrase">The specific phrase.</param>
+        public static bool AddMessage( MessageCategory messageCategory, string responseMessage, string specificPhrase = null )
+        {
+            var db = ResponseMessageDatabase.Load( true );
+            var qry = db
+                .Where( a => a.MessageCategory.Equals( messageCategory ))
+                .Where( a => a.Message.Equals( responseMessage, StringComparison.OrdinalIgnoreCase ) );
+
+            if ( !string.IsNullOrWhiteSpace( specificPhrase ) )
+            {
+                qry = qry.Where( a => a.DefineResponseSpecificPhrase.Equals( specificPhrase, StringComparison.OrdinalIgnoreCase ) );
+            }
+            
+            if ( !qry.Any())
+            {
+                db.Add( new ResponseMessage { Guid = Guid.NewGuid(), MessageCategory = messageCategory, DefineResponseSpecificPhrase = specificPhrase, Message = responseMessage } );
+                db.Save();
+                ResponseMessageDatabase.Load( true );
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -161,9 +194,9 @@ namespace HorseBot
             if ( !string.IsNullOrWhiteSpace( specificPhrase ) )
             {
                 categoryMessageList = categoryMessageList
-                    .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse)
+                    .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse )
                     .Where( a => a.DefineResponseSpecificPhrase != null )
-                    .Where(a => a.DefineResponseSpecificPhrase.Equals(specificPhrase, StringComparison.OrdinalIgnoreCase));
+                    .Where( a => a.DefineResponseSpecificPhrase.Equals( specificPhrase, StringComparison.OrdinalIgnoreCase ) );
             }
 
             int maxIndex = categoryMessageList.Count();
@@ -235,7 +268,6 @@ namespace HorseBot
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Oh, what a beautiful day it is! You guys are awesome.", MessageCategory = MessageCategory.JoinMessage } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I tumble for you.", MessageCategory = MessageCategory.JoinMessage } );
 
-
             // Random Answers "How.."
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "We could try rebooting it first", MessageCategory = MessageCategory.RandomAnswerHow } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Try asking Microsoft", MessageCategory = MessageCategory.RandomAnswerHow } );
@@ -282,8 +314,6 @@ namespace HorseBot
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Chuck Norris?", MessageCategory = MessageCategory.RandomAnswerWho } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I pretty sure you know who that is", MessageCategory = MessageCategory.RandomAnswerWho } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I can't think of his name, just saw him the other day though", MessageCategory = MessageCategory.RandomAnswerWho } );
-
-
         }
     }
 }

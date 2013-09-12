@@ -23,6 +23,15 @@ namespace HipChat
         private BackgroundColor color = BackgroundColor.yellow; // default is yellow
         private MessageFormat messageFormat = MessageFormat.text; // default is html;
 
+        public int MessageSentCount { get; private set; }
+        
+        public int ApiCallCount { 
+            get 
+            { 
+                return HttpUtils.ApiCallCount; 
+            }
+        }
+        
         /// <summary>
         /// Message format this parameter determines the format of the messages posted to hip chat.
         /// HTML is the default, however text is useful when whating to alert specific users.
@@ -450,6 +459,21 @@ namespace HipChat
             // the API method currently only returns a fixed "sent" value, so there's no point returning it.
             // if something went wrong we'll get an HipChatApiWebException that will contain the message
             HttpUtils.CallApi(request);
+
+            MessageSentCount++;
+        }
+
+        /// <summary>
+        /// Sends the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="messageFormat">The message format.</param>
+        public void SendMessageHtml( string message)
+        {
+            MessageFormat origMessageFormat = this.messageFormat;
+            this.messageFormat = MessageFormat.html;
+            SendMessage( message );
+            this.messageFormat = origMessageFormat;
         }
 
 
@@ -522,7 +546,15 @@ namespace HipChat
             this.Format = ApiResponseFormat.XML;
             XmlSerializer s = new XmlSerializer(typeof(Entities.Messages));
             Entities.Messages theMessages = s.Deserialize(new StringReader(RoomHistory(dt))) as Entities.Messages;
-            return new List<Entities.Message>(theMessages.MessageList);
+            if ( theMessages != null )
+            {
+                if ( theMessages.MessageList != null )
+                {
+                    return new List<Entities.Message>( theMessages.MessageList );
+                }
+            }
+
+            return new List<Entities.Message>();
         }
 
         public List<Entities.Message> ListHistoryAsNativeObjects()
@@ -530,7 +562,15 @@ namespace HipChat
             this.Format = ApiResponseFormat.XML;
             XmlSerializer s = new XmlSerializer(typeof(Entities.Messages));
             Entities.Messages theMessages = s.Deserialize(new StringReader(RoomHistory())) as Entities.Messages;
-            return new List<Entities.Message>(theMessages.MessageList);
+            if ( theMessages != null )
+            {
+                if ( theMessages.MessageList != null )
+                {
+                    return new List<Entities.Message>( theMessages.MessageList );
+                }
+            }
+
+            return new List<Entities.Message>();
         }
 
         /// <summary>
