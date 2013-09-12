@@ -36,9 +36,9 @@ namespace HorseBot
         RandomAnswerWhere,
 
         RandomAnswerWhen,
-        
+
         RandomAnswerWhy,
-        
+
         RandomAnswerHow,
 
         MathAdd,
@@ -55,12 +55,16 @@ namespace HorseBot
 
         AddMessage,
 
-        DefineResponse,
+        AddDefineResponse,
+
+        GetDefineResponse,
+
+        KarmaChange,
+
+        KarmaReport,
 
         Unknown
     }
-
-    
 
     /// <summary>
     /// 
@@ -78,9 +82,30 @@ namespace HorseBot
         [DataMember]
         public MessageCategory MessageCategory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the unique identifier.
+        /// </summary>
+        /// <value>
+        /// The unique identifier.
+        /// </value>
         [DataMember]
         public Guid Guid { get; set; }
 
+        /// <summary>
+        /// Gets or sets the define response specific phrase.
+        /// </summary>
+        /// <value>
+        /// The define response specific phrase.
+        /// </value>
+        [DataMember]
+        public string DefineResponseSpecificPhrase { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
         [DataMember]
         public string Message { get; set; }
     }
@@ -109,16 +134,38 @@ namespace HorseBot
         }
 
         /// <summary>
+        /// Determines whether [has specific phrase] [the specified message].
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public static bool HasSpecificPhrase( string message)
+        {
+            var messageDatabase = ResponseMessageDatabase.Load();
+            return messageDatabase
+                .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse)
+                .Where( a => a.DefineResponseSpecificPhrase != null )
+                .Any(a => a.DefineResponseSpecificPhrase.Equals(message, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
         /// Gets the random.
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns></returns>
-        public static string GetRandom( MessageCategory category )
+        public static string GetRandom( MessageCategory category, string specificPhrase = null )
         {
             var messageDatabase = ResponseMessageDatabase.Load();
 
             var rand = new Random();
             var categoryMessageList = messageDatabase.Where( a => a.MessageCategory == category );
+            if ( !string.IsNullOrWhiteSpace( specificPhrase ) )
+            {
+                categoryMessageList = categoryMessageList
+                    .Where( a => a.MessageCategory == MessageCategory.GetDefineResponse)
+                    .Where( a => a.DefineResponseSpecificPhrase != null )
+                    .Where(a => a.DefineResponseSpecificPhrase.Equals(specificPhrase, StringComparison.OrdinalIgnoreCase));
+            }
+
             int maxIndex = categoryMessageList.Count();
             if ( maxIndex > 0 )
             {
@@ -144,9 +191,9 @@ namespace HorseBot
         /// Loads this instance.
         /// </summary>
         /// <returns></returns>
-        public static ResponseMessageDatabase Load()
+        public static ResponseMessageDatabase Load( bool forceReload = false )
         {
-            if ( _responseMessageDatabase != null )
+            if ( _responseMessageDatabase != null && forceReload == false )
             {
                 return _responseMessageDatabase;
             }
@@ -174,6 +221,9 @@ namespace HorseBot
             return _responseMessageDatabase;
         }
 
+        /// <summary>
+        /// Seeds this instance.
+        /// </summary>
         private void Seed()
         {
             // Join Messages
@@ -196,14 +246,14 @@ namespace HorseBot
             // Random Answers "What.."
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Good question", MessageCategory = MessageCategory.RandomAnswerWhat } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I'm interested in figuring that out", MessageCategory = MessageCategory.RandomAnswerWhat } );
-            
+
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "They're supposed to do that", MessageCategory = MessageCategory.RandomAnswerWhatAre } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Oh, those things are awesome", MessageCategory = MessageCategory.RandomAnswerWhatAre } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I guess I could google it", MessageCategory = MessageCategory.RandomAnswerWhatAre } );
 
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Probably just a figment of your imagination", MessageCategory = MessageCategory.RandomAnswerWhatIs } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Oh, that's something I could figure out", MessageCategory = MessageCategory.RandomAnswerWhatIs } );
-            
+
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "The really good ones", MessageCategory = MessageCategory.RandomAnswerWhatKind } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I'm guessing...bacon flavored?", MessageCategory = MessageCategory.RandomAnswerWhatKind } );
 
@@ -232,8 +282,8 @@ namespace HorseBot
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "Chuck Norris?", MessageCategory = MessageCategory.RandomAnswerWho } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I pretty sure you know who that is", MessageCategory = MessageCategory.RandomAnswerWho } );
             this.Add( new ResponseMessage { Guid = Guid.NewGuid(), Message = "I can't think of his name, just saw him the other day though", MessageCategory = MessageCategory.RandomAnswerWho } );
-            
-            
+
+
         }
     }
 }

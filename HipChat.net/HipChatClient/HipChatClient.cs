@@ -21,7 +21,7 @@ namespace HipChat
         private bool notify = false;
         private string token = string.Empty;
         private BackgroundColor color = BackgroundColor.yellow; // default is yellow
-        private MessageFormat messageFormat = MessageFormat.html; // default is html;
+        private MessageFormat messageFormat = MessageFormat.text; // default is html;
 
         /// <summary>
         /// Message format this parameter determines the format of the messages posted to hip chat.

@@ -56,6 +56,11 @@ namespace HorseBot
             }
         }
 
+        /// <summary>
+        /// Ares all numbers.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns></returns>
         private bool AreAllNumbers( List<string> list )
         {
             bool result = true;
@@ -72,6 +77,11 @@ namespace HorseBot
             return result;
         }
 
+        /// <summary>
+        /// Gets the message category.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         public MessageCategory GetMessageCategory( string message )
         {
             MessageCategory result = MessageCategory.Unknown;
@@ -103,9 +113,9 @@ namespace HorseBot
             }
 
             // Bot Programming
-            if ( message.StartsWith( "DefineResponse " ) )
+            if ( message.StartsWith( "AddDefineResponse " ) )
             {
-                return MessageCategory.DefineResponse;
+                return MessageCategory.AddDefineResponse;
             }
 
             if ( message.StartsWith( "AddMessage " ) )
@@ -122,6 +132,12 @@ namespace HorseBot
             if ( message.Equals( "What time is it?", StringComparison.OrdinalIgnoreCase ) )
             {
                 return MessageCategory.SpecificWhatTimeIsIt;
+            }
+
+            /* Specific Phrase */
+            if ( ResponseMessageDatabase.HasSpecificPhrase( message ) )
+            {
+                return MessageCategory.GetDefineResponse;
             }
 
             /* Random Answers */
@@ -142,6 +158,9 @@ namespace HorseBot
             return result;
         }
 
+        /// <summary>
+        /// Processes the messages.
+        /// </summary>
         public void ProcessMessages()
         {
             hipChatClient = new HipChatClient( apiToken, roomOfDoomId, botName );
@@ -253,6 +272,19 @@ namespace HorseBot
                                     break;
                                 case MessageCategory.SpecificWhatTimeIsIt:
                                     hipChatClient.SendMessage( "I think it is about " + DateTime.Now.ToLongTimeString() );
+                                    break;
+                                case MessageCategory.AddDefineResponse:
+                                    List<string> msgParts = messageItem.Text.Split( new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+                                    if ( msgParts.Count() == 3 )
+                                    {
+                                        var db = ResponseMessageDatabase.Load( true );
+                                        db.Add( new ResponseMessage { Guid = Guid.NewGuid(), MessageCategory = MessageCategory.GetDefineResponse, DefineResponseSpecificPhrase = msgParts[1].Trim(), Message = msgParts[2].Trim() } );
+                                        db.Save();
+                                        ResponseMessageDatabase.Load( true );
+                                    }
+                                    break;
+                                case MessageCategory.GetDefineResponse:
+                                    hipChatClient.SendMessage(ResponseMessageDatabase.GetRandom( messageCategory, messageItem.Text ));
                                     break;
                                 case MessageCategory.Quit:
                                     hipChatClient.SendMessage( "I quit :(" );
