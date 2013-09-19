@@ -36,7 +36,7 @@ namespace WPFClock
         private void Window_Loaded_1( object sender, RoutedEventArgs e )
         {
             tmrMain = new Timer();
-            tmrMain.Interval = 100;
+            tmrMain.Interval = 1000;
             tmrMain.Elapsed += tmrMain_Elapsed;
             tmrMain.Enabled = true;
         }
@@ -46,7 +46,6 @@ namespace WPFClock
             Dispatcher.Invoke( () =>
             {
                 lblClockHhMm.Content = DateTime.Now.ToString( "t" );
-                lblClockSecs.Content = DateTime.Now.ToString( "o" );
             } );
         }
     }

@@ -1,0 +1,15 @@
+#file types
+*.DS_Store
+*.tlog
+*.vsp
+*.psess
+*.v11.suo
+*.user
+*.suo
+
+#specific files
+
+#specific folders
+[Oo]bj/
+[Dd]ebug*/
+[Rr]elease*/
