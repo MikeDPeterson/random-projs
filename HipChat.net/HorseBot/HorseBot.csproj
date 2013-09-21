@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BotMessageProcessor.cs" />
+    <Compile Include="CatFacts.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="KarmaDatabase.cs" />
     <Compile Include="Program.cs" />

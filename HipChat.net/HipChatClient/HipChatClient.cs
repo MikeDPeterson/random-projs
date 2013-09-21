@@ -454,6 +454,8 @@ namespace HipChat
                 }
             #endregion validation
 
+            this.Notify = true;
+
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(FormatMessageUri(message));
             request.Method = "POST";
             // the API method currently only returns a fixed "sent" value, so there's no point returning it.

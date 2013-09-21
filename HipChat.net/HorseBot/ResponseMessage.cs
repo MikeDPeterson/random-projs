@@ -63,6 +63,8 @@ namespace HorseBot
 
         BotQuit,
 
+        CatFacts,
+
         Unknown
     }
 
@@ -127,6 +129,8 @@ namespace HorseBot
         /// </summary>
         public void Save()
         {
+            
+            //File.Copy(fileName, string.Format("ResponseMessageDatabase_{0}.xml", DateTime.Now.ToString("o")));
             ResponseMessageDatabase cleanedDB = new ResponseMessageDatabase();
             cleanedDB.AddRange( this.Where( a => !string.IsNullOrWhiteSpace( a.Message ) ).ToList() );
             cleanedDB.TrimExcess();

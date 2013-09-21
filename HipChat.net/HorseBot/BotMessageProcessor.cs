@@ -12,12 +12,25 @@ namespace HorseBot
     /// </summary>
     public class BotMessageProcessor
     {
-        const string apiToken = "6e72e6e19bbb3580ea1b9751bc61f4";
+        const string ourToken = "6e72e6e19bbb3580ea1b9751bc61f4";
+        const string designersToken = "d41088f5baacd41de00d2110cb5d54";
+        const string apiToken = ourToken;
+        
+        // rooms
         const int roomOfDoomId = 222901;
+        const int debugRoomId = 284955;
+        const int designersRoomId = 187059;
+
+        const int currentRoomId = roomOfDoomId;
+        
         const string botName = "HorseBot";
         HipChatClient hipChatClient = null;
         DateTime lastRandomAnswer = DateTime.MinValue;
         DateTime startupDateTime;
+
+        DateTime lastCatFact = DateTime.MaxValue;
+        CatFacts _catFacts = new CatFacts();
+        double catFactMinutes = 60;
 
         public string GetMessageStartWith( MessageCategory messageCategory )
         {
@@ -55,6 +68,11 @@ namespace HorseBot
         /// <returns></returns>
         private bool AreAllNumbers( List<string> list )
         {
+            if ( list.Count == 0 )
+            {
+                return false;
+            }
+            
             bool result = true;
 
             foreach ( string item in list )
@@ -74,9 +92,18 @@ namespace HorseBot
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public MessageCategory GetMessageCategory( string message )
+        public MessageCategory GetMessageCategory( HipChat.Entities.Message messageItem )
         {
+            string message = messageItem.Text;
+            
             MessageCategory result = MessageCategory.Unknown;
+
+            /* Cat Facts */
+
+            if ( message.Equals( "Cat Facts", StringComparison.OrdinalIgnoreCase ) )
+            {
+                return MessageCategory.CatFacts;
+            }
 
             /* Karma */
             if ( message.EndsWith( "++" ) )
@@ -188,8 +215,16 @@ namespace HorseBot
         /// </summary>
         public void ProcessMessages()
         {
-            hipChatClient = new HipChatClient( apiToken, roomOfDoomId, botName );
-            hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( MessageCategory.JoinMessage ) );
+            hipChatClient = new HipChatClient( apiToken, currentRoomId, botName );
+            if ( lastCatFact < DateTime.Now )
+            {
+                hipChatClient.SendMessage( "Thank you for subscribing to Cat Facts!" );
+            }
+            else
+            {
+                hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( MessageCategory.JoinMessage ) );
+            }
+
             startupDateTime = DateTime.Now;
 
             bool keepRunning = true;
@@ -203,6 +238,12 @@ namespace HorseBot
                 try
                 {
                     System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
+
+                    if ( ( DateTime.Now - lastCatFact ).TotalMinutes >= catFactMinutes )
+                    {
+                        hipChatClient.SendMessage( _catFacts.GetRandomCatFact() );
+                        lastCatFact = DateTime.Now;
+                    }
 
                     List<HipChat.Entities.Message> recentMessageList = hipChatClient.ListHistoryAsNativeObjects();
                     recentMessageList = recentMessageList.OrderBy( a => a.Date ).ToList();
@@ -218,14 +259,14 @@ namespace HorseBot
                         // clean up the message a little
                         messageItem.Text = messageItem.Text.Replace( "\\n", string.Empty ).Trim();
 
-                        MessageCategory messageCategory = GetMessageCategory( messageItem.Text );
+                        MessageCategory messageCategory = GetMessageCategory( messageItem );
                         if ( messageCategory != MessageCategory.Unknown )
                         {
                             /* Respond to the RandomAnswerXX class of messagecatagory */
                             string enumName = Enum.GetName( typeof( MessageCategory ), messageCategory );
                             if ( enumName.StartsWith( "RandomAnswer" ) )
                             {
-                                hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( messageCategory ) );
+                                hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( messageCategory ).Replace( "{0}", messageItem.From.FirstName ) );
                                 continue;
                             }
 
@@ -301,7 +342,7 @@ namespace HorseBot
                                     break;
 
                                 case MessageCategory.GetDefineResponse:
-                                    hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( messageCategory, messageItem.Text ) );
+                                    hipChatClient.SendMessage( ResponseMessageDatabase.GetRandom( messageCategory, messageItem.Text ).Replace( "{0}", messageItem.From.FirstName ) );
                                     break;
 
                                 /* Programming */
@@ -459,6 +500,22 @@ namespace HorseBot
                                         System.Threading.Thread.Sleep( 500 );
 
                                         hipChatClient.SendMessage( string.Format( "Want more help? Go look at the source code at {1}, {0} :)", messageItem.From.FirstName, "https://github.com/mikepetersonccv/random-projs/tree/master/HipChat.net/HorseBot" ) );
+                                    }
+                                    break;
+
+
+                                case MessageCategory.CatFacts:
+                                    {
+                                        if ( lastCatFact == DateTime.MaxValue )
+                                        {
+                                            lastCatFact = DateTime.MinValue;
+                                            hipChatClient.SendMessage( string.Format("Thank you for subscribing to Cat Facts! You will get a random cat fact every {0} minutes", catFactMinutes) );
+                                        }
+                                        else
+                                        {
+                                            hipChatClient.SendMessage( "I will stop sending you Cat Facts now." );
+                                            lastCatFact = DateTime.MaxValue;
+                                        }
                                     }
                                     break;
 
