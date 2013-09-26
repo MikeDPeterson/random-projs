@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HipChat;
+using HipChat.Entities;
 
 namespace HorseBot
 {
@@ -244,6 +245,10 @@ namespace HorseBot
                         hipChatClient.SendMessage( _catFacts.GetRandomCatFact() );
                         lastCatFact = DateTime.Now;
                     }
+
+                    Room currentRoom = hipChatClient.ListRoomsAsNativeObjects().Where( a => a.Id == currentRoomId ).FirstOrDefault();
+                    //currentRoom.LastActive
+
 
                     List<HipChat.Entities.Message> recentMessageList = hipChatClient.ListHistoryAsNativeObjects();
                     recentMessageList = recentMessageList.OrderBy( a => a.Date ).ToList();

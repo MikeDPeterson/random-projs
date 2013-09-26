@@ -495,6 +495,23 @@ namespace HipChat
         }
 
         /// <summary>
+        /// Shows the room.
+        /// </summary>
+        /// <param name="roomId">The room unique identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">You must set the Token property before calling the API.</exception>
+        public string ShowRoom( int roomId )
+        {
+            #region validation
+            if ( string.IsNullOrEmpty( Token ) )
+                throw new InvalidOperationException( "You must set the Token property before calling the API." );
+            #endregion validation
+
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( FormatRoomShowUri(roomId) );
+            return HttpUtils.CallApi( request );
+        }
+
+        /// <summary>
         /// Returns the list of available rooms as native C# objects
         /// </summary>
         /// <returns>A List<> containing strongly-typed Entities.Room objects</returns>
@@ -634,6 +651,17 @@ namespace HipChat
             return string.Format("https://api.hipchat.com/v1/rooms/list?format={0}&auth_token={1}",
                 this.Format.ToString().ToLower(),
                 this.Token);
+        }
+
+        /// <summary>
+        /// Formats the URI for the /rooms/show API (http://www.hipchat.com/docs/api/method/rooms/show)
+        /// </summary>
+        private string FormatRoomShowUri(int roomId)
+        {
+            return string.Format( "https://api.hipchat.com/v1/rooms/show?room_id={2}format={0}&auth_token={1}",
+                this.Format.ToString().ToLower(),
+                this.Token,
+                roomId);
         }
 
         /// <summary>

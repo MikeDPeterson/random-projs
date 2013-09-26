@@ -75,6 +75,7 @@
     <Compile Include="Entities\Messages.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\Rooms.cs" />
+    <Compile Include="Entities\ShowRoom.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="HipChatClient.cs" />
     <Compile Include="HipChatApiWebException.cs" />
