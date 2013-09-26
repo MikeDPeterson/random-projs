@@ -65,6 +65,10 @@ namespace HorseBot
 
         CatFacts,
 
+        Define,
+
+        Weather,
+
         Unknown
     }
 

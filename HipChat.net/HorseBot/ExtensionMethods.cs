@@ -35,5 +35,10 @@ namespace HorseBot
         {
             return str.Split( new char[] { c }, StringSplitOptions.RemoveEmptyEntries );
         }
+
+        public static string TrimStartChar(this string str, char c)
+        {
+            return str.TrimStart( new char[] { c } );
+        }
     }
 }

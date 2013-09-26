@@ -35,6 +35,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,8 @@
   <ItemGroup>
     <Compile Include="BotMessageProcessor.cs" />
     <Compile Include="CatFacts.cs" />
+    <Compile Include="WeatherAPI.cs" />
+    <Compile Include="DictionaryAPI.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="KarmaDatabase.cs" />
     <Compile Include="Program.cs" />

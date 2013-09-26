@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<entry_list version="1.0">
+  <entry id="dog[1]">
+    <ew>dog</ew>
+    <subj>ZM-1#AH-1#FD-10#EC-8a#AS-5#BZ-6b#AN-6#HW-3</subj>
+    <art>
+      <artref id="dog"/>
+      <capt>
+        dog 1a: <it>1</it> pastern, <it>2</it> chest, <it>3</it> flews, <it>4</it> muzzle, <it>5</it> stop, <it>6</it> occiput, <it>7</it> leather, <it>8</it> crest, <it>9</it> withers, <it>10</it> loin, <it>11</it> point of rump, <it>12</it> hock <it>or</it> tarsus, <it>13</it> knee <it>or</it> stifle, <it>14</it> brisket, <it>15</it> elbow, <it>16</it> feathering
+      </capt>
+      <dim>210,28</dim>
+    </art>
+    <hw hindex="1">dog</hw>
+    <sound>
+      <wav>dog00002.wav</wav>
+      <wpr>!dog</wpr>
+      <wav>dog00001.wav</wav>
+      <wpr>!d@g</wpr>
+    </sound>
+    <pr>ˈdȯg, ˈdäg</pr>
+    <fl>noun</fl>
+    <lb>often attributive</lb>
+    <et>
+      Middle English, from Old English <it>docga</it>
+    </et>
+    <def>
+      <date>before 12th century</date>
+      <sn>1 a</sn>
+      <dt>
+        :<sx>canid</sx>
+      </dt>
+      <sd>especially</sd>
+      <dt>
+        :a highly variable domestic mammal (<it>Canis familiaris</it>) closely related to the gray wolf
+      </dt>
+      <sn>b</sn>
+      <dt>:a male dog</dt>
+      <sd>also</sd>
+      <dt>:a male usually carnivorous mammal</dt>
+      <sn>2 a</sn>
+      <dt>:a worthless or contemptible person</dt>
+      <sn>b</sn>
+      <dt>
+        :<sx>fellow</sx> <sx>chap</sx> <vi>
+          a lazy <it>dog</it>
+        </vi> <vi>
+          you lucky <it>dog</it>
+        </vi>
+      </dt>
+      <sn>3 a</sn>
+      <dt>:any of various usually simple mechanical devices for holding, gripping, or fastening that consist of a spike, bar, or hook</dt>
+      <sn>b</sn>
+      <dt>
+        :<sx>andiron</sx>
+      </dt>
+      <sn>4</sn>
+      <dt>
+        :uncharacteristic or affected stylishness or dignity <vi>
+          put on the <it>dog</it>
+        </vi>
+      </dt>
+      <sn>5</sn>
+      <slb>capitalized</slb>
+      <dt>:either of the constellations Canis Major or Canis Minor</dt>
+      <sn>6</sn>
+      <sin>
+        <spl>plural</spl>
+      </sin>
+      <dt>
+        :<sx>feet</sx>
+      </dt>
+      <sn>7</sn>
+      <sin>
+        <spl>plural</spl>
+      </sin>
+      <dt>
+        :<sx>ruin</sx> <vi>
+          going to the <it>dog</it><it>s</it>
+        </vi>
+      </dt>
+      <sn>8</sn>
+      <dt>
+        :one inferior of its kind <vi>
+          the movie was a <it>dog</it>
+        </vi>: as
+      </dt>
+      <sn>a</sn>
+      <dt>:an investment not worth its price</dt>
+      <sn>b</sn>
+      <dt>:an undesirable piece of merchandise </dt>
+      <sn>9</sn>
+      <dt>:an unattractive person</dt>
+      <sd>especially</sd>
+      <dt>:an unattractive girl or woman</dt>
+      <sn>10</sn>
+      <dt>
+        :<sx>
+          hot dog <sxn>1</sxn>
+        </sx>
+      </dt>
+    </def>
+    <uro>
+      <ure>dog*like</ure>
+      <sound>
+        <wav>dog00003.wav</wav>
+        <wpr>!dog-+lIk</wpr>
+      </sound>
+      <pr>ˈdȯg-ˌlīk</pr>
+      <fl>adjective</fl>
+    </uro>
+    <art>
+      <bmp>dog.bmp</bmp>
+      <cap>
+        dog 1a: <it>1 </it>pastern, <it>2 </it>chest, <it>3 </it>flews, <it>4 </it>muzzle, <it>5 </it>stop, <it>6 </it>occiput, <it>7 </it>leather, <it>8 </it>crest, <it>9 </it>withers, <it>10 </it>loin, <it>11 </it>point of rump, <it>12 </it>hock <it>or </it>tarsus, <it>13 </it>knee <it>or </it>stifle, <it>14 </it>brisket, <it>15 </it>elbow, <it>16 </it>feathering
+      </cap>
+    </art>
+  </entry>
+  <entry id="dog[2]">
+    <ew>dog</ew>
+    <subj>LN-2#ZM-1#AH-1</subj>
+    <hw hindex="2">dog</hw>
+    <fl>adjective</fl>
+    <def>
+      <date>14th century</date>
+      <sn>1</sn>
+      <dt>
+        :<sx>canine</sx>
+      </dt>
+      <sn>2</sn>
+      <dt>
+        :<sx>spurious</sx>
+      </dt>
+      <sd>especially</sd>
+      <dt>
+        :unlike that used by native speakers or writers <vi>
+          <it>dog</it> Latin
+        </vi> <vi>
+          <it>dog</it> French
+        </vi>
+      </dt>
+    </def>
+  </entry>
+  <entry id="dog[3]">
+    <ew>dog</ew>
+    <subj>HF-1a</subj>
+    <hw hindex="3">dog</hw>
+    <fl>verb</fl>
+    <in>
+      <if>dogged</if>
+      <sound>
+        <wav>dog00004.wav</wav>
+        <wpr>!dogd</wpr>
+      </sound>
+      <pr>ˈdȯgd, ˈdägd</pr>
+    </in>
+    <in>
+      <if>dog*ging</if>
+    </in>
+    <def>
+      <vt>transitive verb</vt>
+      <date>1519</date>
+      <sn>1 a</sn>
+      <dt>
+        :to hunt, track, or follow like a hound <vi>
+          <it>dogged</it> her every move
+        </vi>
+      </dt>
+      <sn>b</sn>
+      <dt>
+        :to worry as if by pursuit with dogs :<sx>plague</sx> <vi>
+          <it>dogged</it> by his past failures
+        </vi>
+      </dt>
+      <sn>c</sn>
+      <dt>
+        :to bother or pester persistently <vi>
+          <it>dogged</it> him about his grades
+        </vi>
+      </dt>
+      <sn>2</sn>
+      <dt>:to fasten with a dog</dt>
+    </def>
+    <dro>
+      <drp>dog it</drp>
+      <def>
+        <dt>
+          :to fail to do one's best :<sx>goldbrick</sx>
+        </dt>
+      </def>
+    </dro>
+  </entry>
+  <entry id="dog[4]">
+    <ew>dog</ew>
+    <hw hindex="4">dog</hw>
+    <fl>adverb</fl>
+    <def>
+      <date>1526</date>
+      <dt>
+        :<sx>extremely</sx> <sx>utterly</sx> <vi>
+          <it>dog</it>-tired
+        </vi>
+      </dt>
+    </def>
+  </entry>
+  <entry id="dog and pony show">
+    <ew>dog and pony show</ew>
+    <grp>dog and</grp>
+    <grp>dog pony</grp>
+    <grp>dog show</grp>
+    <grp>pony show</grp>
+    <grp>and pony</grp>
+    <grp>and show</grp>
+    <grp>pony show</grp>
+    <subj>BZ</subj>
+    <hw>dog and pony show</hw>
+    <fl>noun</fl>
+    <def>
+      <date>1970</date>
+      <dt>:an often elaborate public relations or sales presentation</dt>
+      <sd>also</sd>
+      <dt>:an elaborate or overblown affair or event</dt>
+    </def>
+  </entry>
+  <entry id="dog biscuit">
+    <ew>dog biscuit</ew>
+    <subj>FD#AH</subj>
+    <hw>dog biscuit</hw>
+    <fl>noun</fl>
+    <def>
+      <date>circa 1858</date>
+      <dt>:a hard dry cracker for dogs</dt>
+    </def>
+  </entry>
+  <entry id="dog collar">
+    <ew>dog collar</ew>
+    <subj>AH-1#CL-2#JW-3</subj>
+    <hw>dog collar</hw>
+    <fl>noun</fl>
+    <def>
+      <date>1501</date>
+      <sn>1</sn>
+      <dt>:a collar for a dog</dt>
+      <sn>2</sn>
+      <ssl>slang</ssl>
+      <dt>
+        :<sx>clerical collar</sx>
+      </dt>
+      <sn>3</sn>
+      <dt>:a wide flexible snug-fitting necklace</dt>
+    </def>
+  </entry>
+  <entry id="dog days">
+    <ew>dog days</ew>
+    <subj>AT-1</subj>
+    <hw>dog days</hw>
+    <fl>noun plural</fl>
+    <et>from their being reckoned from the heliacal rising of the Dog Star (Sirius)</et>
+    <def>
+      <date>1538</date>
+      <sn>1</sn>
+      <dt>:the period between early July and early September when the hot sultry weather of summer usually occurs in the northern hemisphere</dt>
+      <sn>2</sn>
+      <dt>:a period of stagnation or inactivity</dt>
+    </def>
+  </entry>
+  <entry id="dog-ear">
+    <ew>dog-ear</ew>
+    <subj>PR</subj>
+    <hw>dog–ear</hw>
+    <sound>
+      <wav>dog_ea01.wav</wav>
+      <wpr>!do-+gir</wpr>
+    </sound>
+    <pr>ˈdȯg-ˌir</pr>
+    <fl>noun</fl>
+    <def>
+      <date>1856</date>
+      <dt>:the turned-down corner of a page especially of a book</dt>
+    </def>
+    <uro>
+      <ure>dog–ear</ure>
+      <fl>transitive verb</fl>
+    </uro>
+  </entry>
+  <entry id="dog-eared">
+    <ew>dog-eared</ew>
+    <subj>PR-1</subj>
+    <hw>dog–eared</hw>
+    <sound>
+      <wav>dog_ea02.wav</wav>
+      <wpr>!do-+gird</wpr>
+    </sound>
+    <pr>ˈdȯg-ˌird</pr>
+    <fl>adjective</fl>
+    <def>
+      <date>circa 1800</date>
+      <sn>1</sn>
+      <dt>
+        :having dog-ears <vi>
+          a <it>dog–eared</it> book
+        </vi>
+      </dt>
+      <sn>2</sn>
+      <dt>
+        :<sx>shabby</sx> <sx>timeworn</sx> <vi>
+          a <it>dog–eared</it> resort
+        </vi> <vi>
+          <it>dog–eared</it> myths
+        </vi>
+      </dt>
+    </def>
+  </entry>
+</entry_list>

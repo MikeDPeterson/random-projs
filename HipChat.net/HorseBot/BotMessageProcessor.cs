@@ -88,6 +88,8 @@ namespace HorseBot
             return result;
         }
 
+        #region GetMessageCategory
+
         /// <summary>
         /// Gets the message category.
         /// </summary>
@@ -123,7 +125,7 @@ namespace HorseBot
                 }
             }
 
-            if ( message.StartsWith( "KarmaReport |" ) )
+            if ( message.StartsWith( "KarmaReport ") || message.StartsWith("Karma Report") )
             {
                 return MessageCategory.KarmaReport;
             }
@@ -208,8 +210,22 @@ namespace HorseBot
                 }
             }
 
+            /* Lookup Definition of term */
+
+            if ( message.StartsWith( "Define ", StringComparison.OrdinalIgnoreCase ) )
+            {
+                return MessageCategory.Define;
+            }
+
+            if ( message.StartsWith( "Weather ", StringComparison.OrdinalIgnoreCase ) )
+            {
+                return MessageCategory.Weather;
+            }
+
             return result;
         }
+
+        #endregion
 
         /// <summary>
         /// Processes the messages.
@@ -484,9 +500,11 @@ namespace HorseBot
                                         StringBuilder sb = new StringBuilder();
                                         sb.AppendLine( "Bot Commands:" );
                                         sb.AppendLine( "BotHelp (shows this)" );
+                                        sb.AppendLine( "define term (shows the definition of term)" );
+                                        sb.AppendLine( "weather city (shows current weather for city)" );
                                         sb.AppendLine( "BotQuit (stops the bot program)" );
                                         sb.AppendLine( "BotStats (shows stats)" );
-                                        sb.AppendLine( "KarmaReport | Phrase (or just KarmaReport |)" );
+                                        sb.AppendLine( "KarmaReport | Phrase (or just KarmaReport)" );
                                         sb.AppendLine( "What time is it? (shows the current time)" );
                                         sb.AppendLine( "AddDefineResponse | some exact phrase | random response when bot hears it" );
                                         sb.AppendLine( "AddMessage | JoinMessage | random response when coming online" );
@@ -520,6 +538,56 @@ namespace HorseBot
                                         {
                                             hipChatClient.SendMessage( "I will stop sending you Cat Facts now." );
                                             lastCatFact = DateTime.MaxValue;
+                                        }
+                                    }
+                                    break;
+
+                                case MessageCategory.Define:
+                                    {
+                                        string term = messageItem.Text.Substring("Define ".Length).Trim();
+
+                                        if ( !string.IsNullOrWhiteSpace( term ) )
+                                        {
+                                            DictionaryAPI dictionaryApi = new DictionaryAPI();
+                                            string xmlResponse = dictionaryApi.GetDefinitionResponseXml( term );
+
+                                            string def = dictionaryApi.GetFirstDefinitionHtml( xmlResponse );
+
+                                            if ( string.IsNullOrWhiteSpace( def ) )
+                                            {
+                                                hipChatClient.SendMessage(string.Format("Huh? Ummmm.... I have no idea what '{0}' means", term));
+                                            }
+                                            else
+                                            {
+                                                hipChatClient.SendMessageHtml( def );
+                                            }
+
+
+                                        }
+                                    }
+                                    break;
+
+                                case MessageCategory.Weather:
+                                    {
+                                        string term = messageItem.Text.Substring( "Weather ".Length ).Trim();
+
+                                        if ( !string.IsNullOrWhiteSpace( term ) )
+                                        {
+                                            WeatherAPI weatherApi = new WeatherAPI();
+                                            string xmlResponse = weatherApi.GetWeatherXml( term );
+
+                                            string weatherHtml = weatherApi.GetResponseHtml( xmlResponse );
+
+                                            if ( string.IsNullOrWhiteSpace( weatherHtml ) )
+                                            {
+                                                hipChatClient.SendMessage( string.Format( "I can't get a weather report for {0}", term ) );
+                                            }
+                                            else
+                                            {
+                                                hipChatClient.SendMessageHtml( weatherHtml );
+                                            }
+
+
                                         }
                                     }
                                     break;

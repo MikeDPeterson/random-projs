@@ -8,7 +8,7 @@ namespace HipChat
     /// <summary>
     /// Http utilities class used for the API integration itself.
     /// </summary>
-    class HttpUtils
+    public class HttpUtils
     {
         public static int ApiCallCount { get; private set; }
         
