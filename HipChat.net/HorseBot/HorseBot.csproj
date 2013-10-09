@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BotMessageProcessor.cs" />
     <Compile Include="CatFacts.cs" />
+    <Compile Include="ParallelPort.cs" />
     <Compile Include="WeatherAPI.cs" />
     <Compile Include="DictionaryAPI.cs" />
     <Compile Include="ExtensionMethods.cs" />

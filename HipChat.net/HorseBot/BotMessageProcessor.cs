@@ -16,14 +16,14 @@ namespace HorseBot
         const string ourToken = "6e72e6e19bbb3580ea1b9751bc61f4";
         const string designersToken = "d41088f5baacd41de00d2110cb5d54";
         const string apiToken = ourToken;
-        
+
         // rooms
         const int roomOfDoomId = 222901;
         const int debugRoomId = 284955;
         const int designersRoomId = 187059;
 
         const int currentRoomId = roomOfDoomId;
-        
+
         const string botName = "HorseBot";
         HipChatClient hipChatClient = null;
         DateTime lastRandomAnswer = DateTime.MinValue;
@@ -69,11 +69,11 @@ namespace HorseBot
         /// <returns></returns>
         private bool AreAllNumbers( List<string> list )
         {
-            if ( list.Count == 0 )
+            if ( list.Count <= 1 )
             {
                 return false;
             }
-            
+
             bool result = true;
 
             foreach ( string item in list )
@@ -98,12 +98,12 @@ namespace HorseBot
         public MessageCategory GetMessageCategory( HipChat.Entities.Message messageItem )
         {
             string message = messageItem.Text;
-            
+
             MessageCategory result = MessageCategory.Unknown;
 
             /* Cat Facts */
 
-            if ( message.Equals( "Cat Facts", StringComparison.OrdinalIgnoreCase ) )
+            if ( message.Equals( "Cat Facts", StringComparison.OrdinalIgnoreCase ) || message.StartsWith( "Cat Facts ", StringComparison.OrdinalIgnoreCase ) )
             {
                 return MessageCategory.CatFacts;
             }
@@ -125,7 +125,7 @@ namespace HorseBot
                 }
             }
 
-            if ( message.StartsWith( "KarmaReport ") || message.StartsWith("Karma Report") )
+            if ( message.StartsWith( "KarmaReport" ) || message.StartsWith( "Karma Report" ) )
             {
                 return MessageCategory.KarmaReport;
             }
@@ -261,10 +261,6 @@ namespace HorseBot
                         hipChatClient.SendMessage( _catFacts.GetRandomCatFact() );
                         lastCatFact = DateTime.Now;
                     }
-
-                    Room currentRoom = hipChatClient.ListRoomsAsNativeObjects().Where( a => a.Id == currentRoomId ).FirstOrDefault();
-                    //currentRoom.LastActive
-
 
                     List<HipChat.Entities.Message> recentMessageList = hipChatClient.ListHistoryAsNativeObjects();
                     recentMessageList = recentMessageList.OrderBy( a => a.Date ).ToList();
@@ -437,8 +433,8 @@ namespace HorseBot
                                         }
                                         else
                                         {
-                                            var top10 = db.Where(a => a.Score > 0).OrderByDescending( a => a.Score ).Take( 10 );
-                                            var bottom10 = db.Where(a => a.Score < 0).OrderBy( a => a.Score ).Take( 10 );
+                                            var top10 = db.Where( a => a.Score > 0 ).OrderByDescending( a => a.Score ).Take( 10 );
+                                            var bottom10 = db.Where( a => a.Score < 0 ).OrderBy( a => a.Score ).Take( 10 );
                                             var controversial10 = db.Where( a => a.IncCount > 0 && a.DecCount > 0 ).OrderByDescending( a => a.IncCount + a.DecCount ).Take( 10 );
 
                                             // top 10
@@ -479,7 +475,7 @@ namespace HorseBot
                                             tableHtml += "</table>";
 
                                             hipChatClient.SendMessageHtml( "Controversial 10 " + Environment.NewLine + tableHtml );
-                                            
+
                                         }
                                     }
                                     break;
@@ -498,7 +494,7 @@ namespace HorseBot
                                 case MessageCategory.BotHelp:
                                     {
                                         StringBuilder sb = new StringBuilder();
-                                        sb.AppendLine( "Bot Commands:" );
+                                        sb.AppendLine( "<pre>" );
                                         sb.AppendLine( "BotHelp (shows this)" );
                                         sb.AppendLine( "define term (shows the definition of term)" );
                                         sb.AppendLine( "weather city (shows current weather for city)" );
@@ -506,33 +502,48 @@ namespace HorseBot
                                         sb.AppendLine( "BotStats (shows stats)" );
                                         sb.AppendLine( "KarmaReport | Phrase (or just KarmaReport)" );
                                         sb.AppendLine( "What time is it? (shows the current time)" );
-                                        sb.AppendLine( "AddDefineResponse | some exact phrase | random response when bot hears it" );
-                                        sb.AppendLine( "AddMessage | JoinMessage | random response when coming online" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerHow | random response when a question starts with 'How '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhat | random response when a question starts with 'What '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhatAre | random response when a question starts with 'What are '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhatIs | random response when a question starts with 'What is' " );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhatKind | random response when a question starts with 'What kind '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhatTime | random response when a question starts with 'What time '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhen | random response when a question starts with 'When '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhere | random response when a question starts with 'Where '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWho | random response when a question starts with 'Who '" );
-                                        sb.AppendLine( "AddMessage | RandomAnswerWhy | random response when a question starts with 'Why '" );
-                                        hipChatClient.SendMessage( sb.ToString() );
+                                        sb.AppendLine( "AddDefineResponse | some exact phrase | response when bot hears it" );
+                                        sb.AppendLine( "AddMessage | JoinMessage | response when coming online" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerHow | response when a question starts with 'How '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhat | response when a question starts with 'What '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhatAre | response when a question starts with 'What are '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhatIs | response when a question starts with 'What is' " );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhatKind | response when a question starts with 'What kind '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhatTime | response when a question starts with 'What time '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhen | response when a question starts with 'When '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhere | response when a question starts with 'Where '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWho | response when a question starts with 'Who '" );
+                                        sb.AppendLine( "AddMessage | RandomAnswerWhy | response when a question starts with 'Why '" );
+                                        sb.AppendLine( "" );
+                                        sb.AppendLine();
+                                        sb.AppendLine( string.Format( "Want more help? Go look at the source code at {1}, {0} :)", messageItem.From.FirstName, "https://github.com/mikepetersonccv/random-projs/tree/master/HipChat.net/HorseBot" ) );
+                                        sb.AppendLine( "</pre>" );
+                                        hipChatClient.SendMessageHtml( sb.ToString() );
                                         // sleep a little so they come out in the right order
                                         System.Threading.Thread.Sleep( 500 );
-
-                                        hipChatClient.SendMessage( string.Format( "Want more help? Go look at the source code at {1}, {0} :)", messageItem.From.FirstName, "https://github.com/mikepetersonccv/random-projs/tree/master/HipChat.net/HorseBot" ) );
                                     }
                                     break;
-
 
                                 case MessageCategory.CatFacts:
                                     {
                                         if ( lastCatFact == DateTime.MaxValue )
                                         {
                                             lastCatFact = DateTime.MinValue;
-                                            hipChatClient.SendMessage( string.Format("Thank you for subscribing to Cat Facts! You will get a random cat fact every {0} minutes", catFactMinutes) );
+                                            string[] messageParts = messageItem.Text.Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
+                                            if ( messageParts.Length == 3 )
+                                            {
+                                                double minutesParam;
+                                                if ( double.TryParse( messageParts[2], out minutesParam ) )
+                                                {
+                                                    catFactMinutes = minutesParam;
+                                                }
+                                                else
+                                                {
+                                                    catFactMinutes = 60;
+                                                }
+                                            }
+
+                                            hipChatClient.SendMessage( string.Format( "Thank you for subscribing to Cat Facts! You will get a random cat fact every {0} minutes", catFactMinutes ) );
                                         }
                                         else
                                         {
@@ -544,7 +555,7 @@ namespace HorseBot
 
                                 case MessageCategory.Define:
                                     {
-                                        string term = messageItem.Text.Substring("Define ".Length).Trim();
+                                        string term = messageItem.Text.Substring( "Define ".Length ).Trim();
 
                                         if ( !string.IsNullOrWhiteSpace( term ) )
                                         {
@@ -555,7 +566,7 @@ namespace HorseBot
 
                                             if ( string.IsNullOrWhiteSpace( def ) )
                                             {
-                                                hipChatClient.SendMessage(string.Format("Huh? Ummmm.... I have no idea what '{0}' means", term));
+                                                hipChatClient.SendMessage( string.Format( "Huh? Ummmm.... I have no idea what '{0}' means", term ) );
                                             }
                                             else
                                             {
