@@ -69,6 +69,8 @@ namespace HorseBot
 
         Weather,
 
+        ChuckNorris,
+
         Unknown
     }
 

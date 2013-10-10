@@ -222,6 +222,11 @@ namespace HorseBot
                 return MessageCategory.Weather;
             }
 
+            if ( message.Contains("Chuck Norris") )
+            {
+                return MessageCategory.ChuckNorris;
+            }
+
             return result;
         }
 
@@ -601,6 +606,21 @@ namespace HorseBot
 
                                         }
                                     }
+                                    break;
+
+                                case MessageCategory.ChuckNorris:
+                                    {
+                                        ChuckNorris chuckNorris = new ChuckNorris();
+                                        if ( messageItem.Text.EndsWith( "~" ) )
+                                        {
+                                            hipChatClient.SendMessage( chuckNorris.GetRandom( messageItem.From.Name ) );
+                                        }
+                                        else
+                                        {
+                                            hipChatClient.SendMessage( chuckNorris.GetRandom( string.Empty ) );
+                                        }
+                                    }
+                                    
                                     break;
 
                                 case MessageCategory.BotQuit:
