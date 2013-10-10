@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HorseBot
 {
@@ -75,7 +73,7 @@ namespace HorseBot
         {
             get
             {
-                return string.Format( "{0} : ++{1} --{2} Total:{3} ", Phrase,  IncCount, DecCount, Score );
+                return string.Format( "{0} : ++{1} --{2} Total:{3} ", Phrase, IncCount, DecCount, Score );
             }
         }
     }
@@ -98,7 +96,7 @@ namespace HorseBot
         public void Save()
         {
             KarmaDatabase cleanedDB = new KarmaDatabase();
-            cleanedDB.AddRange(this.Where( a => !string.IsNullOrWhiteSpace( a.Phrase ) ));
+            cleanedDB.AddRange( this.Where( a => !string.IsNullOrWhiteSpace( a.Phrase ) ) );
             cleanedDB.TrimExcess();
             DataContractSerializer s = new DataContractSerializer( this.GetType() );
             FileStream fs = new FileStream( fileName, FileMode.Create );

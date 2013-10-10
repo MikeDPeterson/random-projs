@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using HipChat;
-using HipChat.Entities;
 
 namespace HorseBot
 {
@@ -222,10 +220,17 @@ namespace HorseBot
                 return MessageCategory.Weather;
             }
 
-            if ( message.Contains("Chuck Norris") )
+            if ( message.Contains( "Chuck Norris" ) )
             {
                 return MessageCategory.ChuckNorris;
             }
+
+            /* This is That */
+            if ( message.Contains( " is " ) )
+            {
+                return MessageCategory.ThisIsThat;
+            }
+
 
             return result;
         }
@@ -620,7 +625,58 @@ namespace HorseBot
                                             hipChatClient.SendMessage( chuckNorris.GetRandom( string.Empty ) );
                                         }
                                     }
-                                    
+
+                                    break;
+
+                                case MessageCategory.ThisIsThat:
+                                    {
+                                        string[] parts = messageItem.Text.Split( new string[] { " is " }, 2, StringSplitOptions.RemoveEmptyEntries );
+                                        if ( parts.Length == 2 )
+                                        {
+                                            string termPhrase = parts[0].Trim();
+                                            string definition = parts[1].Trim();
+                                            ThisIsThat thisIsThat = new ThisIsThat();
+
+                                            // if it starts with "No. ", update with the new definition
+                                            if ( termPhrase.StartsWith( "No. ", StringComparison.OrdinalIgnoreCase )
+                                                || termPhrase.StartsWith( "No, ", StringComparison.OrdinalIgnoreCase )
+                                                || termPhrase.StartsWith( "No! ", StringComparison.OrdinalIgnoreCase ) )
+                                            {
+                                                termPhrase = termPhrase.Substring( 4 ).Trim();
+                                                if ( !string.IsNullOrWhiteSpace( termPhrase ) )
+                                                {
+                                                    thisIsThat.AddUpdate( termPhrase, definition );
+                                                    string response = "OK. " + thisIsThat.GetStraightResponse( termPhrase );
+                                                    hipChatClient.SendMessage( response );
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if ( thisIsThat.ContainsTerm( termPhrase ) )
+                                                {
+                                                    if ( !string.IsNullOrWhiteSpace( definition ) )
+                                                    {
+                                                        if ( !thisIsThat.GetDefinition( termPhrase ).Equals( definition, StringComparison.OrdinalIgnoreCase ) )
+                                                        {
+                                                            // we got a new ThisIsThat for an existing term, respond with a "But, that is..."
+                                                            hipChatClient.SendMessage( thisIsThat.GetConfusedResponse( termPhrase ) );
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        // we somehow got here without a definition part, just respond with what it is.
+                                                        hipChatClient.SendMessage( thisIsThat.GetStraightResponse( termPhrase ) );
+                                                    }
+                                                }
+                                                else if ( !string.IsNullOrWhiteSpace( definition ) )
+                                                {
+                                                    // silently store the new ThisIsThat 
+                                                    thisIsThat.AddUpdate( termPhrase, definition );
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     break;
 
                                 case MessageCategory.BotQuit:

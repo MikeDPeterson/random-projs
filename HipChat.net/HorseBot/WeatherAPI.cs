@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace HorseBot
 {
@@ -24,11 +19,14 @@ namespace HorseBot
         /// <returns></returns>
         public string GetWeatherXml( string term )
         {
-            string termEncoded = HttpUtility.UrlEncode(term);
+            string termEncoded = HttpUtility.UrlEncode( term );
 
-            string requestUri = string.Format( "http://api.openweathermap.org/data/2.5/weather?q={0}&mode=xml&units=imperial", termEncoded);
+            string requestUri = string.Format( "http://api.openweathermap.org/data/2.5/weather?q={0}&mode=xml&units=imperial", termEncoded );
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( requestUri );
+
+            // only wait 10 seconds
+            request.Timeout = 10000;
 
             using ( HttpWebResponse response = (HttpWebResponse)request.GetResponse() )
             {
@@ -76,7 +74,7 @@ namespace HorseBot
                  
                  */
                 resultHtml += "<b>" + cityNode.Attributes["name"].Value + "</b><br />";
-                var coord = cityNode.SelectSingleNode( "coord" ); 
+                var coord = cityNode.SelectSingleNode( "coord" );
                 if ( coord != null )
                 {
 
@@ -117,7 +115,7 @@ namespace HorseBot
             }
 
             return resultHtml;
-            
+
         }
     }
 }

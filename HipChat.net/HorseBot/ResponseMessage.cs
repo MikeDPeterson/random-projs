@@ -71,6 +71,8 @@ namespace HorseBot
 
         ChuckNorris,
 
+        ThisIsThat, 
+
         Unknown
     }
 

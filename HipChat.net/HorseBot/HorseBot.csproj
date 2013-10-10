@@ -48,6 +48,7 @@
     <Compile Include="CatFacts.cs" />
     <Compile Include="ChuckNorris.cs" />
     <Compile Include="ParallelPort.cs" />
+    <Compile Include="ThisIsThat.cs" />
     <Compile Include="WeatherAPI.cs" />
     <Compile Include="DictionaryAPI.cs" />
     <Compile Include="ExtensionMethods.cs" />

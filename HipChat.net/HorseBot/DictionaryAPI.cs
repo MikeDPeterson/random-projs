@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace HorseBot
 {
@@ -26,11 +23,14 @@ namespace HorseBot
         /// <returns></returns>
         public string GetDefinitionResponseXml( string term )
         {
-            string termEncoded = HttpUtility.UrlEncode(term);
+            string termEncoded = HttpUtility.UrlEncode( term );
 
             string requestUri = string.Format( "http://www.dictionaryapi.com/api/v1/references/collegiate/xml/{0}?key={1}", termEncoded, apiKeyDictionary );
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( requestUri );
+            
+            // only wait 10 seconds
+            request.Timeout = 10000;
 
             using ( HttpWebResponse response = (HttpWebResponse)request.GetResponse() )
             {
@@ -64,15 +64,15 @@ namespace HorseBot
             var defNode = entryNode.SelectSingleNode( "def" );
             string definitionReponse = string.Empty;
             int senseCount = 0;
-            foreach (var node in defNode.ChildNodes.OfType<XmlNode>())
+            foreach ( var node in defNode.ChildNodes.OfType<XmlNode>() )
             {
                 if ( node.Name == "dt" )
                 {
                     definitionReponse += node.InnerXml.Trim()
-                        .TrimStartChar(':')
-                        .Replace("<sx>", "<pre>")
+                        .TrimStartChar( ':' )
+                        .Replace( "<sx>", "<pre>" )
                         .Replace( "</sx>", "</pre>" )
-                        .Replace("<it>", "<i>")
+                        .Replace( "<it>", "<i>" )
                         .Replace( "</it>", "</i>" )
                         + Environment.NewLine;
                 }

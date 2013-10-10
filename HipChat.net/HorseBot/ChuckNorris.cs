@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace HorseBot
 {
@@ -26,6 +22,9 @@ namespace HorseBot
             }
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( requestUri );
+            
+            // only wait 10 seconds
+            request.Timeout = 10000; 
 
             using ( HttpWebResponse response = (HttpWebResponse)request.GetResponse() )
             {

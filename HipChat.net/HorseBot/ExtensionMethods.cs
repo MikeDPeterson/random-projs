@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace HorseBot
 {
@@ -31,12 +27,12 @@ namespace HorseBot
         /// <param name="str">The STR.</param>
         /// <param name="c">The c.</param>
         /// <returns></returns>
-        public static string[] SplitChar( this string str, char c)
+        public static string[] SplitChar( this string str, char c )
         {
             return str.Split( new char[] { c }, StringSplitOptions.RemoveEmptyEntries );
         }
 
-        public static string TrimStartChar(this string str, char c)
+        public static string TrimStartChar( this string str, char c )
         {
             return str.TrimStart( new char[] { c } );
         }
