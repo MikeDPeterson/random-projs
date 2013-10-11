@@ -286,6 +286,9 @@ namespace HorseBot
                         // clean up the message a little
                         messageItem.Text = messageItem.Text.Replace( "\\n", string.Empty ).Trim();
 
+                        Console.ResetColor();
+                        Console.WriteLine( messageItem.From.Name + ": " + messageItem.Text );
+
                         MessageCategory messageCategory = GetMessageCategory( messageItem );
                         if ( messageCategory != MessageCategory.Unknown )
                         {

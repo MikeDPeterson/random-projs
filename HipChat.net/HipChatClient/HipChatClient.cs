@@ -462,6 +462,9 @@ namespace HipChat
             // if something went wrong we'll get an HipChatApiWebException that will contain the message
             HttpUtils.CallApi(request);
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine( "HorseBot: " + message );
+
             MessageSentCount++;
         }
 
