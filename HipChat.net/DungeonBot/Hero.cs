@@ -11,19 +11,44 @@ namespace DungeonBot
     /// <summary>
     /// Hero class that defines a player
     /// </summary>
-    class Hero
+    [Serializable]
+    [DataContract]
+    public class Hero
     {
-        public string _heroName = null;
-        
-        public int _health = 0;
-        public int _baseHealth = 0;
+        /// <summary>
+        /// gets or sets the hero's name.
+        /// </summary>
+        [DataMember]
+        public string _heroName { get; set; }
 
-        public int _exp = 0;
-        public int _baseExp = 0;
+        /// <summary>
+        /// gets or sets the hero's health
+        /// </summary>
+        [DataMember]
+        public int _health { get; set; }
 
-        public PlayerClass _currentClass = PlayerClass.Warrior;
+        /// <summary>
+        /// gets or sets the hero's base health
+        /// </summary>
+        [DataMember]
+        public int _baseHealth { get; set; }
 
-        public enum PlayerClass
+        /// <summary>
+        /// gets or sets the hero's experience
+        /// </summary>
+        [DataMember]
+        public int _exp { get; set; }
+
+        /// <summary>
+        /// gets or sets the hero's base experience
+        /// </summary>
+        [DataMember]
+        public int _baseExp { get; set; }
+
+        /// <summary>
+        /// the hero's class
+        /// </summary>
+        public enum HeroClass
         {
             Warrior,
 
@@ -34,7 +59,10 @@ namespace DungeonBot
             Rogue
         }
 
-        enum PlayerActions
+        /// <summary>
+        /// the hero's actions
+        /// </summary>
+        enum HeroAction
         {
             Attack,
 
