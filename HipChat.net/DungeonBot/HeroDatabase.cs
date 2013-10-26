@@ -41,7 +41,7 @@ namespace DungeonBot
         /// <value>
         /// The _response message database.
         /// </value>
-        private static HeroDatabase _responseMessageDatabase { get; set; }
+        private static HeroDatabase _heroMessageDatabase { get; set; }
 
         /// <summary>
         /// Loads this instance.
@@ -49,9 +49,9 @@ namespace DungeonBot
         /// <returns></returns>
         public static HeroDatabase Load(bool forceReload = false)
         {
-            if (_responseMessageDatabase != null && forceReload == false)
+            if (_heroMessageDatabase != null && forceReload == false)
             {
-                return _responseMessageDatabase;
+                return _heroMessageDatabase;
             }
 
             if (File.Exists(fileName))
@@ -60,8 +60,8 @@ namespace DungeonBot
                 try
                 {
                     DataContractSerializer s = new DataContractSerializer(typeof(HeroDatabase));
-                    _responseMessageDatabase = s.ReadObject(fs) as HeroDatabase;
-                    return _responseMessageDatabase;
+                    _heroMessageDatabase = s.ReadObject(fs) as HeroDatabase;
+                    return _heroMessageDatabase;
                 }
                 finally
                 {
@@ -70,10 +70,10 @@ namespace DungeonBot
             }
 
             // file doesn't exist, create and reload
-            _responseMessageDatabase = new HeroDatabase();
-            _responseMessageDatabase.Save();
+            _heroMessageDatabase = new HeroDatabase();
+            _heroMessageDatabase.Save();
 
-            return _responseMessageDatabase;
+            return _heroMessageDatabase;
         }
     }
 }
