@@ -39,7 +39,7 @@ namespace DungeonBot
     public class Room
     {
         /// <summary>
-        /// text to describe room when hero enters
+        /// text to describe room when the hero enters
         /// </summary>
         public string _roomDescription;
 
