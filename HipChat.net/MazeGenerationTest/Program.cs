@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+
+using DungeonBot;
 
 namespace MazeGenerationTest
 {
@@ -10,14 +10,32 @@ namespace MazeGenerationTest
     {
         static void Main(string[] args)
         {
-            Console.Title = "Maze Generation Test";
+            // set title
+            Console.Title = "Dungeon Generation Test";
+            bool appRunning = true;
 
-            Maze maze = new Maze();
+            while ( appRunning == true )
+            {
+                // create maze and draw to console
+                Dungeon dungeon = new Dungeon();
+                dungeon.DrawDungeon();
 
-            maze.DrawMaze();
+                Console.Clear();
+                dungeon.GenerateDungeon();
+                dungeon.DrawDungeon();
 
-            Console.Read();
+                if ( dungeon.ValidDungeon() == true )
+                {
+                    Console.WriteLine("\nValidation passed!");
+                }
+                else
+                {
+                    Console.WriteLine("\nValidation failed");
+                }
 
+                Console.WriteLine("\nPress Enter to generate a new maze...");
+                Console.Read();
+            }
         }
     }
 }
