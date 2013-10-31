@@ -14,6 +14,9 @@ namespace DungeonBot
         /// <param name="args">The args.</param>
         static void Main(string[] args)
         {
+            // for testing XML saving
+            new DungeonBot.Dungeon.RoomDatabase().Save();
+            
             new BotMessageProcessor().ProcessMessages();
         }
     }

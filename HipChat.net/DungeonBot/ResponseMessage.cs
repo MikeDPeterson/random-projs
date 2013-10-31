@@ -17,7 +17,7 @@ namespace DungeonBot
 
         BotStats,
 
-        BotHelp,
+        Help,
 
         BotQuit,
 

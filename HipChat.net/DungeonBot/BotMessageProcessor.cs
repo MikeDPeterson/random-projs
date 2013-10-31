@@ -38,7 +38,7 @@ namespace DungeonBot
 
             if ( message.Equals( "BotHelp", StringComparison.OrdinalIgnoreCase ) )
             {
-                return MessageCategory.BotHelp;
+                return MessageCategory.Help;
             }
 
             if ( message.Equals( "BotQuit" ) )
@@ -67,13 +67,10 @@ namespace DungeonBot
             DateTime lastGotDateTime = DateTime.UtcNow.Subtract( new TimeSpan( 0, 0, 5 ) );
 
             while ( keepRunning )
-            {
+            {                
                 try
                 {
                     System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
-                    
-                    // see is a player has joined or left a room
-                    
 
                     List<HipChat.Entities.Message> recentMessageList = hipChatClient.ListHistoryAsNativeObjects();
                     recentMessageList = recentMessageList.OrderBy( a => a.Date ).ToList();
@@ -104,23 +101,23 @@ namespace DungeonBot
                                 case MessageCategory.BotStats:
                                     {
                                         StringBuilder sb = new StringBuilder();
-                                        sb.AppendLine( string.Format( "I've been running since {0}", startupDateTime.ToString( "F" ) ) );
+                                        sb.AppendLine( string.Format( "Running since {0}", startupDateTime.ToString( "F" ) ) );
                                         sb.AppendLine( string.Format( "Messages Sent {0}", hipChatClient.MessageSentCount ) );
                                         sb.AppendLine( string.Format( "Api Calls {0}", hipChatClient.ApiCallCount ) );
                                         hipChatClient.SendMessage( sb.ToString() );
                                     }
                                     break;
 
-                                case MessageCategory.BotHelp:
+                                case MessageCategory.Help:
                                     {
                                         StringBuilder sb = new StringBuilder();
                                         sb.AppendLine( "<pre>" );
-                                        sb.AppendLine( "BotHelp (shows this)" );
+                                        sb.AppendLine( "Help (shows this)" );
                                         sb.AppendLine( "BotQuit (stops the bot program)" );
                                         sb.AppendLine( "BotStats (shows stats)" );
                                         sb.AppendLine( "" );
                                         sb.AppendLine();
-                                        sb.AppendLine( string.Format( "Want more help? Go look at the source code at {1}, {0} :)", messageItem.From.FirstName, "https://github.com/mikepetersonccv/random-projs/tree/master/HipChat.net/HorseBot" ) );
+                                        sb.AppendLine( string.Format( "Want to improve DungeonBot? Go look at the source code at {1}, {0}", messageItem.From.FirstName, "https://github.com/mikepetersonccv/random-projs/tree/master/HipChat.net/HorseBot" ) );
                                         sb.AppendLine( "</pre>" );
                                         hipChatClient.SendMessageHtml( sb.ToString() );
                                         // sleep a little so they come out in the right order
@@ -136,7 +133,6 @@ namespace DungeonBot
                                 default:
                                     break;
                             }
-
                         }
                     }
                 }
