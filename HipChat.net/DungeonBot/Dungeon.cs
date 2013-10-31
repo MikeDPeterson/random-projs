@@ -206,8 +206,13 @@ namespace DungeonBot
 
             private static RoomDatabase _roomDatabase { get; set; }
 
-            public static RoomDatabase Load()
+            public static RoomDatabase Load( bool forceReload = false )
             {
+                if ( _roomDatabase != null && forceReload == false )
+                {
+                    return _roomDatabase;
+                }
+                
                 if ( File.Exists( fileName ) )
                 {
                     FileStream fs = new FileStream( fileName, FileMode.Open );
@@ -233,7 +238,7 @@ namespace DungeonBot
             public void Save()
             {
                 RoomDatabase cleanedDB = new RoomDatabase();
-                cleanedDB.ToString();
+                cleanedDB.AddRange( this.ToList() );
 
                 DataContractSerializer s = new DataContractSerializer(this.GetType());
                 FileStream fs = new FileStream(fileName, FileMode.Create);
