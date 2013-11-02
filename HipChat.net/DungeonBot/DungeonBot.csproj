@@ -43,12 +43,9 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotMessageProcessor.cs" />
-    <Compile Include="Hero.cs" />
-    <Compile Include="HeroDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResponseMessage.cs" />
+    <Compile Include="CommandDatabase.cs" />
     <Compile Include="Dungeon.cs" />
   </ItemGroup>
   <ItemGroup>

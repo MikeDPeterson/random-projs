@@ -14,6 +14,11 @@ namespace DungeonBot
     public class Dungeon
     {
         /// <summary>
+        /// Current location of the players in the dungeon.
+        /// </summary>
+        public Location currentRoom;
+        
+        /// <summary>
         /// Determines size of the dungeon.
         /// </summary>
         private int _dungeonSize = 6;
@@ -21,7 +26,16 @@ namespace DungeonBot
         /// <summary>
         /// Current floor of the dungeon.
         /// </summary>
-        private int _dungeonFloor = 1;
+        public int _dungeonFloor = 1;
+
+        /// <summary>
+        /// Location struct to store a X/Y coordinate.
+        /// </summary>
+        public struct Location
+        {
+            public int x;
+            public int y;
+        }
         
         /// <summary>
         /// An array that holds the dungeon layout.
@@ -34,6 +48,8 @@ namespace DungeonBot
         public Dungeon()
         {   
             _dungeonLayout = new Room[_dungeonSize, _dungeonSize];
+            _dungeonFloor = 1;
+
             bool dungeonvalidated = false;
 
             while ( dungeonvalidated == false )
@@ -48,6 +64,8 @@ namespace DungeonBot
                     continue;
                 }
             }
+
+            currentRoom = FindRoomByType( Room.RoomType.StartRoom );
         }
 
         /// <summary>
@@ -57,7 +75,6 @@ namespace DungeonBot
         {
             // random generator
             Random rnd = new Random();
-            int rndRoomType = rnd.Next(0, 1);
 
             // loop through dungeon array and create rooms
             for ( int y = 0; y < _dungeonSize; y++ )
@@ -118,7 +135,7 @@ namespace DungeonBot
                 }
             }
 
-            // checks for one start, one boss room and they are spaced appropriately
+            // checks for one start room, one boss room and that they are spaced appropriately
             if ( bossRoomCount < 1 |
                 startRoomCount < 1 |
                 ( Math.Pow(bossLocationX - startLocationX, 2) +
@@ -149,6 +166,31 @@ namespace DungeonBot
 
                 Console.WriteLine();
             }
+        }
+
+        public Location FindRoomByType( Room.RoomType roomType )
+        {
+            Location location = new Location();
+            
+            for ( int y = 0; y < _dungeonSize; y++ )
+            {
+                for ( int x = 0; x < _dungeonSize; x++ )
+                {
+                    if ( _dungeonLayout[x, y].roomType == roomType )
+                    {
+                        location.x = x;
+                        location.y = y;
+
+                        return location;
+                    }
+                }
+            }
+            return location;
+        }
+
+        public Room.RoomType GetRoomType(Location location)
+        {
+            return _dungeonLayout[location.x, location.y].roomType;
         }
 
         /// <summary>
