@@ -29,6 +29,8 @@ namespace DungeonBot
             West,
 
             // game commands
+            Map,
+
             CurrentRoom,
 
             GenerateDungeon,
@@ -81,6 +83,11 @@ namespace DungeonBot
             if ( command.Equals( "West" ) )
             {
                 return Command.West;
+            }
+
+            if ( command.Equals( "Map" ) )
+            {
+                return Command.Map;
             }
 
             if ( command.Equals( "CurrentRoom" ) )

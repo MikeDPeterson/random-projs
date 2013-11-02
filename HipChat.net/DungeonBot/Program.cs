@@ -35,7 +35,9 @@ namespace DungeonBot
             DateTime lastGotDateTime = DateTime.UtcNow.Subtract( new TimeSpan( 0, 0, 5 ) );
 
             while ( gameRunning == true )
-            {           
+            {
+                dungeon.Visited( dungeon.currentRoom );
+                
                 try
                 {
                     System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
@@ -150,6 +152,13 @@ namespace DungeonBot
                                     }
                                     break;
                                     
+                                case CommandDatabase.Command.Map:
+                                    StringBuilder map = new StringBuilder();
+                                    map.AppendLine( "Floor: " + dungeon._dungeonFloor + "| LEGEND: S = Starting Area, R = Room, B = Boss Room, #/X = Blocked Room" );
+                                    map.AppendLine( dungeon.DrawMap() );
+                                    hipChatClient.SendMessage( map.ToString() );
+                                    break;
+
                                 case CommandDatabase.Command.GenerateDungeon:
                                     dungeon = new Dungeon();
                                     hipChatClient.SendMessage( "New dungeon created. Good luck!" );

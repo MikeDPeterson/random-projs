@@ -36,7 +36,7 @@ namespace DungeonBot
             public int x;
             public int y;
         }
-        
+
         /// <summary>
         /// An array that holds the dungeon layout.
         /// </summary>
@@ -150,7 +150,7 @@ namespace DungeonBot
         }
 
         /// <summary>
-        /// Draws the dungeon.
+        /// Draws the dungeon to the console.  Used for debugging.
         /// </summary>
         public void DrawDungeon()
         {
@@ -168,6 +168,54 @@ namespace DungeonBot
             }
         }
 
+        /// <summary>
+        /// Used to draw a map to hipchat.
+        /// </summary>
+        /// <returns></returns>
+        public string DrawMap()
+        {
+            StringBuilder map = new StringBuilder();
+
+            for ( int y = 0; y < _dungeonSize; y++ )
+            {
+                for ( int x = 0; x < _dungeonSize; x++ )
+                {
+                    if ( _dungeonLayout[x, y].HasVisited == true )
+                    {
+                        if ( _dungeonLayout[x, y].roomType == Room.RoomType.StartRoom )
+                        {
+                            map.Append( "S " );
+                        }
+                        else if ( _dungeonLayout[x, y].roomType == Room.RoomType.Blocked )
+                        {
+                            map.Append( "X " );
+                        }
+                        else if ( _dungeonLayout[x, y].roomType == Room.RoomType.BossRoom )
+                        {
+                            map.Append( "B " );
+                        }
+                        else if ( _dungeonLayout[x, y].roomType == Room.RoomType.Passable )
+                        {
+                            map.Append( "R " );
+                        }
+                    }
+                    else
+                    {
+                        map.Append( "# " );
+                    }
+                    
+                }
+
+                map.AppendLine();
+            }
+            return map.ToString();
+        }
+
+        /// <summary>
+        /// Searches the dungeon for a the specified RoomType.
+        /// </summary>
+        /// <param name="roomType">A RoomType</param>
+        /// <returns></returns>
         public Location FindRoomByType( Room.RoomType roomType )
         {
             Location location = new Location();
@@ -188,9 +236,19 @@ namespace DungeonBot
             return location;
         }
 
+        /// <summary>
+        /// Returns a RoomType based on location.
+        /// </summary>
+        /// <param name="location">A location</param>
+        /// <returns></returns>
         public Room.RoomType GetRoomType(Location location)
         {
             return _dungeonLayout[location.x, location.y].roomType;
+        }
+
+        public void Visited(Location location)
+        {
+            _dungeonLayout[location.x, location.y].HasVisited = true;
         }
 
         /// <summary>
@@ -205,6 +263,11 @@ namespace DungeonBot
             /// </summary>
             [DataMember]
             public RoomType roomType { get; set; }
+
+            /// <summary>
+            /// Stores whether or not the player(s) has been in this room
+            /// </summary>
+            public bool HasVisited { get; set; }
 
             /// <summary>
             /// Defines the room types
