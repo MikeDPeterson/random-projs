@@ -15,29 +15,31 @@ namespace DungeonBot
         /// <param name="args">The args.</param>
         static void Main(string[] args)
         {
-            const string apiToken = "7a695002c154abd55955d9ef8b9375";
-            const int currentRoomId = 321236;
-            const string botName = "DungeonBot";
-            HipChatClient hipChatClient = null;
-            DateTime startupDateTime;
+            // HipChat initialization
+            // The Dungeon room = 321236; DebugRoom = 284955
+            HipChatClient hipChatClient = new HipChatClient( "7a695002c154abd55955d9ef8b9375", 284955, "DungeonBot" );
+            DateTime startupDateTime = DateTime.Now;
             
-            bool gameRunning = true;
-            
-            Dungeon dungeon = new Dungeon();
-
-            CommandDatabase commands = new CommandDatabase();
-            startupDateTime = DateTime.Now;
-
-            hipChatClient = new HipChatClient( apiToken, currentRoomId, botName );
-
             // rate limit is 100 API requests per 5 minutes
             int minWaitTimeSeconds = 5 * 60 / 100;
             DateTime lastGotDateTime = DateTime.UtcNow.Subtract( new TimeSpan( 0, 0, 5 ) );
 
+            // game initialization
+            bool gameRunning = true;
+            Dungeon dungeon = new Dungeon();
+            CommandDatabase commands = new CommandDatabase();
+            Dungeon.Location lastRoom = new Dungeon.Location();
+
             while ( gameRunning == true )
             {
                 dungeon.Visited( dungeon.currentRoom );
-                
+
+                /* 
+                if ( lastRoom.x != dungeon.currentRoom.x & lastRoom.x != dungeon.currentRoom.y)
+                {
+                    hipChatClient.SendMessage( dungeon.GetRoomNarrative( dungeon.currentRoom ) );
+                }
+                */
                 try
                 {
                     System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
@@ -47,9 +49,11 @@ namespace DungeonBot
                     if ( recentMessageList.Count > 0 )
                     {
                         var lastMessage = recentMessageList.Last();
-                        recentMessageList = recentMessageList.Where( a => a.Date > lastGotDateTime ).Where( a => a.From.Name != botName ).ToList();
+                        recentMessageList = recentMessageList.Where( a => a.Date > lastGotDateTime ).Where( a => a.From.Name != "DungeonBot" ).ToList();
                         lastGotDateTime = lastMessage.Date;
                     }
+
+                    #region CommandProcessing
 
                     foreach ( var messageItem in recentMessageList )
                     {
@@ -82,11 +86,13 @@ namespace DungeonBot
                                     {
                                         StringBuilder sb = new StringBuilder();
                                         sb.AppendLine( "<pre>" );
-                                        sb.AppendLine( "Help (shows this)" );
-                                        sb.AppendLine( "BotQuit (stops the bot program)" );
-                                        sb.AppendLine( "BotStats (shows stats)" );
-                                        sb.AppendLine( "CurrentRoom (shows current room of the dungeon)" );
-                                        sb.AppendLine( "GenerateDungeon (generates a new dungeon - keep in mind you will start on floor 1 and lose any progress)" );
+                                        sb.AppendLine( "Help (Shows this)" );
+                                        sb.AppendLine( "BotStats (Shows stats)" );
+                                        sb.AppendLine( "BotQuit (Stops the bot program)" );
+                                        sb.AppendLine( "North, South, East, West (Movement commands)" );
+                                        sb.AppendLine( "Map (Shows the dungeon map.  Only explored areas will be visible)" );
+                                        sb.AppendLine( "CurrentRoom (Shows coordinates of current room. Used for debugging.)" );
+                                        sb.AppendLine( "GenerateDungeon (Fenerates a new dungeon. Keep in mind you will start on floor 1 and lose any progress)" );
                                         sb.AppendLine();
                                         sb.AppendLine( "</pre>" );
                                         hipChatClient.SendMessageHtml( sb.ToString() );
@@ -103,7 +109,7 @@ namespace DungeonBot
                                 case CommandDatabase.Command.North:
                                     Dungeon.Location tmpLocation = dungeon.currentRoom;
                                     tmpLocation.y = tmpLocation.y - 1;
-                                    if ( dungeon.GetRoomType( tmpLocation ) == Dungeon.Room.RoomType.Blocked )
+                                    if ( dungeon.GetRoomType( tmpLocation ) == Room.RoomType.Blocked )
                                     {
                                         hipChatClient.SendMessage( "That direction is blocked." );
                                     }
@@ -116,7 +122,7 @@ namespace DungeonBot
                                 case CommandDatabase.Command.South:
                                     tmpLocation = dungeon.currentRoom;
                                     tmpLocation.y = tmpLocation.y + 1;
-                                    if ( dungeon.GetRoomType( tmpLocation ) == Dungeon.Room.RoomType.Blocked )
+                                    if ( dungeon.GetRoomType( tmpLocation ) == Room.RoomType.Blocked )
                                     {
                                         hipChatClient.SendMessage( "That direction is blocked." );
                                     }
@@ -129,7 +135,7 @@ namespace DungeonBot
                                 case CommandDatabase.Command.East:
                                     tmpLocation = dungeon.currentRoom;
                                     tmpLocation.x = tmpLocation.x + 1;
-                                    if ( dungeon.GetRoomType( tmpLocation ) == Dungeon.Room.RoomType.Blocked )
+                                    if ( dungeon.GetRoomType( tmpLocation ) == Room.RoomType.Blocked )
                                     {
                                         hipChatClient.SendMessage( "That direction is blocked." );
                                     }
@@ -142,7 +148,7 @@ namespace DungeonBot
                                 case CommandDatabase.Command.West:
                                     tmpLocation = dungeon.currentRoom;
                                     tmpLocation.x = tmpLocation.x - 1;
-                                    if ( dungeon.GetRoomType( tmpLocation ) == Dungeon.Room.RoomType.Blocked )
+                                    if ( dungeon.GetRoomType( tmpLocation ) == Room.RoomType.Blocked )
                                     {
                                         hipChatClient.SendMessage( "That direction is blocked." );
                                     }
@@ -173,6 +179,9 @@ namespace DungeonBot
                             }
                         }
                     }
+
+                    #endregion
+
                 }
                 catch ( Exception ex )
                 {
