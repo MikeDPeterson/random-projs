@@ -27,19 +27,20 @@ namespace DungeonBot
             // game initialization
             bool gameRunning = true;
             Dungeon dungeon = new Dungeon();
+            dungeon.SetRoomToVisited( dungeon.currentRoom );
             CommandDatabase commands = new CommandDatabase();
-            Dungeon.Location lastRoom = new Dungeon.Location();
+            Dungeon.Location lastRoom = dungeon.currentRoom;
 
             while ( gameRunning == true )
             {
-                dungeon.Visited( dungeon.currentRoom );
-
-                /* 
-                if ( lastRoom.x != dungeon.currentRoom.x & lastRoom.x != dungeon.currentRoom.y)
+                // check to see if the players are in a new room.  if so, play the current room narrative.
+                if ( lastRoom.x != dungeon.currentRoom.x | lastRoom.y != dungeon.currentRoom.y)
                 {
                     hipChatClient.SendMessage( dungeon.GetRoomNarrative( dungeon.currentRoom ) );
+                    lastRoom = dungeon.currentRoom;
+                    dungeon.SetRoomToVisited( dungeon.currentRoom );
                 }
-                */
+                
                 try
                 {
                     System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
