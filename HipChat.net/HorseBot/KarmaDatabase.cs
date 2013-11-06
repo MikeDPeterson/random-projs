@@ -122,6 +122,19 @@ namespace HorseBot
         }
 
         /// <summary>
+        /// Deletes the karma.
+        /// </summary>
+        /// <param name="phrase">The phrase.</param>
+        private void DeleteKarma( string phrase)
+        {
+            var item = this.GetKarmaItemByPhrase( phrase );
+            if ( item != null )
+            {
+                this.Remove( item );
+            }
+        }
+
+        /// <summary>
         /// Incs the karma.
         /// </summary>
         /// <param name="phrase">The phrase.</param>
@@ -130,6 +143,17 @@ namespace HorseBot
             var db = KarmaDatabase.Load();
             KarmaPhraseStats karmaPhraseStats = db.GetKarmaItemByPhrase( phrase );
             karmaPhraseStats.IncCount++;
+            db.Save();
+        }
+
+        /// <summary>
+        /// Forgets the karma.
+        /// </summary>
+        /// <param name="phrase">The phrase.</param>
+        public static void ForgetKarma( string phrase )
+        {
+            var db = KarmaDatabase.Load();
+            db.DeleteKarma( phrase );
             db.Save();
         }
 

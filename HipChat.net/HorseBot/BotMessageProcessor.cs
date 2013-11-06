@@ -128,6 +128,11 @@ namespace HorseBot
                 return MessageCategory.KarmaReport;
             }
 
+            if ( message.StartsWith( "KarmaForget " ) )
+            {
+                return MessageCategory.KarmaForget;
+            }
+
             /* Bot Stuff */
             if ( message.Equals( "BotStats", StringComparison.OrdinalIgnoreCase ) )
             {
@@ -433,6 +438,14 @@ namespace HorseBot
                                     {
                                         KarmaDatabase.Load();
                                         KarmaDatabase.DecKarma( messageItem.Text.TrimEnd( new char[] { '+', '-' } ) );
+                                    }
+                                    break;
+
+                                case MessageCategory.KarmaForget:
+                                    {
+                                        KarmaDatabase.Load();
+                                        string phrase = messageItem.Text.Substring( "KarmaForget ".Length ).Trim();
+                                        KarmaDatabase.ForgetKarma( phrase );
                                     }
                                     break;
 
