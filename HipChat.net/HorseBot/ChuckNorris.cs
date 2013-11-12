@@ -12,13 +12,13 @@ namespace HorseBot
     {
         public string GetRandom(string fullName)
         {
-            
-            string requestUri = "http://api.icndb.com/jokes/random";
+
+            string requestUri = "http://api.icndb.com/jokes/random?exclude=[explicit]";
 
             string[] nameParts = fullName.Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
             if ( nameParts.Length == 2 )
             {
-                requestUri += string.Format( "?firstName={0}&lastName={1}", nameParts[0], nameParts[1] );
+                requestUri += string.Format( "&firstName={0}&lastName={1}", nameParts[0], nameParts[1] );
             }
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( requestUri );
