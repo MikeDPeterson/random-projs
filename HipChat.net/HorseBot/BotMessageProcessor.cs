@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using HipChat;
 
 namespace HorseBot
@@ -126,6 +127,11 @@ namespace HorseBot
             if ( message.StartsWith( "KarmaReport" ) || message.StartsWith( "Karma Report" ) )
             {
                 return MessageCategory.KarmaReport;
+            }
+
+            if ( message.StartsWith( "KarmaForget " ) )
+            {
+                return MessageCategory.KarmaForget;
             }
 
             /* Bot Stuff */
@@ -436,6 +442,14 @@ namespace HorseBot
                                     }
                                     break;
 
+                                case MessageCategory.KarmaForget:
+                                    {
+                                        KarmaDatabase.Load();
+                                        string phrase = messageItem.Text.Substring( "KarmaForget ".Length ).Trim();
+                                        KarmaDatabase.ForgetKarma( phrase );
+                                    }
+                                    break;
+
                                 case MessageCategory.KarmaReport:
                                     {
                                         var messageParts = messageItem.Text.Trim().SplitChar( '|' );
@@ -622,6 +636,11 @@ namespace HorseBot
                                         if ( messageItem.Text.EndsWith( "~" ) )
                                         {
                                             hipChatClient.SendMessage( chuckNorris.GetRandom( messageItem.From.Name ) );
+                                        }
+                                        else if ( messageItem.Text.EndsWith( ")" ) )
+                                        {
+                                            string result = Regex.Match( messageItem.Text, @"\(([^)]*)\)" ).Groups[1].Value;
+                                            hipChatClient.SendMessage( chuckNorris.GetRandom( result ) );
                                         }
                                         else
                                         {

@@ -82,7 +82,7 @@ namespace DungeonBot
             {
                 for ( int x = 0; x < _dungeonSize; x++ )
                 {
-                    _dungeonLayout[x, y] = new Room();
+                    _dungeonLayout[x, y] = roomDatabase.GetRandomRoom( Room.RoomType.Blocked );
                 }
             }
 
@@ -91,29 +91,29 @@ namespace DungeonBot
             {
                 for ( int x = 1; x < _dungeonSize - 1; x++ )
                 {
-                    _dungeonLayout[x, y].roomType = Room.RoomType.Passable;                
+                    _dungeonLayout[x, y] = roomDatabase.GetRandomRoom( Room.RoomType.Passable );                
                 }
             }
 
             // generate bonus room
-            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )].roomType = Room.RoomType.BonusRoom;
+            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )] = roomDatabase.GetRandomRoom( Room.RoomType.BonusRoom );
 
             // generate start room
-            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )].roomType = Room.RoomType.StartRoom;
+            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )] = roomDatabase.GetRandomRoom( Room.RoomType.StartRoom );
 
             // generate boss room
-            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )].roomType = Room.RoomType.BossRoom;
+            _dungeonLayout[rnd.Next( 1, _dungeonSize - 1 ), rnd.Next( 1, _dungeonSize - 1 )] = roomDatabase.GetRandomRoom( Room.RoomType.BossRoom );
 
-            // loop through array and randomize room narratives
-            for ( int y = 1; y < _dungeonSize - 1; y++ )
-            {
-                for ( int x = 1; x < _dungeonSize - 1; x++ )
-                {
-                    var currentRoomType = _dungeonLayout[x, y].roomType;
-                    Room room = roomDatabase.GetRandomRoom( currentRoomType );
-                    _dungeonLayout[x, y] = room;
-                }
-            }
+            //// INTRODUCED A BUG.loop through array and randomize room narratives
+            //for ( int y = 0; y < _dungeonSize; y++ )
+            //{
+            //    for ( int x = 0; x < _dungeonSize; x++ )
+            //    {
+            //        var currentRoomType = _dungeonLayout[x, y].roomType;
+            //        Room room = roomDatabase.GetRandomRoom( currentRoomType );
+            //        _dungeonLayout[x, y] = room;
+            //    }
+            //}
         }
 
         /// <summary>

@@ -57,6 +57,8 @@ namespace HorseBot
 
         KarmaReport,
 
+        KarmaForget,
+
         BotStats,
 
         BotHelp,
