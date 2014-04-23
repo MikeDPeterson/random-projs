@@ -20,8 +20,8 @@ namespace SuggestionBot
             DateTime startupDateTime = DateTime.Now;
             CommandDatabase commands = new CommandDatabase();
             Nouns _nouns = new Nouns();
-            DateTime lastSuggestion = DateTime.Now;
-            double suggestionMinutes = 10;
+            DateTime lastSuggestion = DateTime.MinValue;
+            double suggestionMinutes = 25;
             bool keepRunning = true;
 
             // rate limit is 100 API requests per 5 minutes
@@ -32,15 +32,15 @@ namespace SuggestionBot
             {
                 try
                 {
-                    System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 2 ) * 1000 );
-
-
                     //Send suggestion :)
                     if ( ( DateTime.Now - lastSuggestion ).TotalMinutes >= suggestionMinutes )
                     {
-                        hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator 2014");
+                        int randomYear = new Random().Next( 2014, 9000 );
+                        hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString());
                         lastSuggestion = DateTime.Now;
                     }
+
+                    System.Threading.Thread.Sleep( ( minWaitTimeSeconds * 4 ) * 1000 );
 
                     List<HipChat.Entities.Message> recentMessageList = hipChatClient.ListHistoryAsNativeObjects();
                     recentMessageList = recentMessageList.OrderBy( a => a.Date ).ToList();

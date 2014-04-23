@@ -59,7 +59,51 @@ namespace SuggestionBot
             Add( "Communion" );
             Add( "Cracker" );
             Add( "Hamster" );
-
+            Add( "Godzilla" );
+            Add( "Albino" );
+            Add( "Boat" );
+            Add( "Infection" );
+            Add( "Farm" );
+            Add( "Landscaper" );
+            Add( "Gamer" );
+            Add( "Bunny" );
+            Add( "Weezel" );
+            Add( "Rat" );
+            Add( "Airplane" );
+            Add( "Simulac" );
+            Add( "Baby" );
+            Add( "Dubstep" );
+            Add( "Prisoner" );
+            Add( "Comedian" );
+            Add( "Weatherman" );
+            Add( "Grocer" );
+            Add( "Honeybadger" );
+            Add( "Accordian" );
+            Add( "Banjo" );
+            Add( "Milk" );
+            Add( "Shriner" );
+            Add( "Juice" );
+            Add( "Icecube" );
+            Add( "Canada" );
+            Add( "Hotdog" );
+            Add( "Kitten" );
+            Add( "Gravity" );
+            Add( "Nerd" );
+            Add( "Grandma" );
+            Add( "Corpse" );
+            Add( "Cloud" );
+            Add( "Dragon" );
+            Add( "Pacman" );
+            Add( "Wizard" );
+            Add( "Nurse" );
+            Add( "Bucket" );
+            Add( "Dirt" );
+            Add( "Vomit" );
+            Add( "Oxygen" );
+            Add( "Bacteria" );
+            Add( "Chicken" );
+            Add( "Cafeteria" );
+            Add( "Coffee" );
         }
 
         /// <summary>

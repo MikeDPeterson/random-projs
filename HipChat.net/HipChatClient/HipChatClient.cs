@@ -463,7 +463,7 @@ namespace HipChat
             HttpUtils.CallApi(request);
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine( "HorseBot: " + message );
+            Console.WriteLine( "{0}: {1}", this.From, message );
 
             MessageSentCount++;
         }
