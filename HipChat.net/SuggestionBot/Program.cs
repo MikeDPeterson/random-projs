@@ -21,7 +21,7 @@ namespace SuggestionBot
             CommandDatabase commands = new CommandDatabase();
             Nouns _nouns = new Nouns();
             DateTime lastSuggestion = DateTime.MinValue;
-            double suggestionMinutes = 25;
+            double suggestionMinutes = 19;
             bool keepRunning = true;
 
             // rate limit is 100 API requests per 5 minutes
@@ -36,7 +36,7 @@ namespace SuggestionBot
                     if ( ( DateTime.Now - lastSuggestion ).TotalMinutes >= suggestionMinutes )
                     {
                         int randomYear = new Random().Next( 2014, 9000 );
-                        hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString());
+                        hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString() );
                         lastSuggestion = DateTime.Now;
                     }
 

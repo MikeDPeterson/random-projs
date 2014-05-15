@@ -11,7 +11,9 @@ namespace SuggestionBot
     /// </summary>
     public class Nouns : List<string>
     {
-        Random rand = new Random();
+        private Random rand = new Random( (int)( DateTime.Now.Ticks / 1000 ) );
+
+        private Dictionary<string, DateTime> lastUsed = new Dictionary<string, DateTime>();
 
         public Nouns()
         {
@@ -104,6 +106,17 @@ namespace SuggestionBot
             Add( "Chicken" );
             Add( "Cafeteria" );
             Add( "Coffee" );
+            Add( "Hepatitis" );
+            Add( "Explosion" );
+            Add( "Apathy" );
+            Add( "Lactose" );
+            Add( "Hydrogen Peroxide" );
+            Add( "Choir" );
+            Add( "Boy Band" );
+            Add( "Diet Coke" );
+            Add( "Donkey Donkey Donkey" );
+            Add( "Angelic" );
+            Add( "Sticky" );
         }
 
         /// <summary>
@@ -115,9 +128,28 @@ namespace SuggestionBot
             int maxIndex = this.Count();
             if ( maxIndex > 0 )
             {
-                
-                int randomIndex = rand.Next( maxIndex );
-                string message = this.ElementAt( randomIndex );
+                DateTime lastUsedDateTime = DateTime.Now;
+                int retries = 0;
+                string message = "nothing";
+                while ( DateTime.Now.Subtract( lastUsedDateTime ).Hours < 8 && retries < maxIndex )
+                {
+                    int randomIndex = rand.Next( maxIndex );
+                    message = this.ElementAt( randomIndex );
+
+                    if ( lastUsed.ContainsKey( message ) )
+                    {
+                        lastUsedDateTime = lastUsed[message];
+                    }
+                    else
+                    {
+                        lastUsed.Add( message, DateTime.Now );
+                        lastUsedDateTime = DateTime.Now;
+                        break;
+                    }
+
+                    retries++;
+                }
+
                 return message;
             }
             else
