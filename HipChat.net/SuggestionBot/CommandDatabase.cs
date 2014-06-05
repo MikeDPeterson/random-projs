@@ -19,6 +19,8 @@ namespace SuggestionBot
 
             BotQuit,
 
+            Suggestions,
+
             Unknown
         }
 
@@ -43,10 +45,17 @@ namespace SuggestionBot
                 return Command.Help;
             }
 
-            if ( command.Equals( "BotQuit" ) )
+            if ( command.Equals( "BotQuit", StringComparison.OrdinalIgnoreCase ) )
             {
                 return Command.BotQuit;
             }
+
+            if ( command.StartsWith( "Suggestions", StringComparison.OrdinalIgnoreCase ) )
+            {
+                return Command.Suggestions;
+            }
+
+
 
             return result;
         }

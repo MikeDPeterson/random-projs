@@ -21,7 +21,7 @@ namespace SuggestionBot
             CommandDatabase commands = new CommandDatabase();
             Nouns _nouns = new Nouns();
             DateTime lastSuggestion = DateTime.MinValue;
-            double suggestionMinutes = 19;
+            double suggestionMinutes = 61;
             bool keepRunning = true;
 
             // rate limit is 100 API requests per 5 minutes
@@ -35,8 +35,16 @@ namespace SuggestionBot
                     //Send suggestion :)
                     if ( ( DateTime.Now - lastSuggestion ).TotalMinutes >= suggestionMinutes )
                     {
-                        int randomYear = new Random().Next( 2014, 9000 );
-                        hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString() );
+                        int randomYear = new Random().Next( 2014, 2018 );
+                        if ( new Random().Next( 2 ) == 1 )
+                        {
+                            hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString() );
+                        }
+                        else
+                        {
+                            hipChatClient.SendMessage( "Chuck Norris (" + _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + ")" );
+                        }
+
                         lastSuggestion = DateTime.Now;
                     }
 
@@ -87,6 +95,7 @@ namespace SuggestionBot
                                         sb.AppendLine( "Help (Shows this)" );
                                         sb.AppendLine( "BotStats (Shows stats)" );
                                         sb.AppendLine( "BotQuit (Stops the bot program)" );
+                                        sb.AppendLine( "Suggestions [minutes] (Toggles game name suggestions)" );
                                         sb.AppendLine();
                                         sb.AppendLine( "</pre>" );
                                         hipChatClient.SendMessageHtml( sb.ToString() );
@@ -97,6 +106,33 @@ namespace SuggestionBot
 
                                 case CommandDatabase.Command.BotQuit:
                                     hipChatClient.SendMessage( "OK, I'll quit now. Goodbye, " + messageItem.From.FirstName );
+                                    break;
+
+                                case CommandDatabase.Command.Suggestions:
+                                    if ( lastSuggestion == DateTime.MaxValue )
+                                    {
+                                        lastSuggestion = DateTime.MinValue;
+                                        string[] messageParts = messageItem.Text.Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
+                                        if ( messageParts.Length == 2 )
+                                        {
+                                            double minutesParam;
+                                            if ( double.TryParse( messageParts[1], out minutesParam ) )
+                                            {
+                                                suggestionMinutes = minutesParam;
+                                            }
+                                            else
+                                            {
+                                                suggestionMinutes = 65;
+                                            }
+                                        }
+
+                                        hipChatClient.SendMessage( string.Format( "Thank you for asking for game name suggestions! You will get a random game suggestions every {0} minutes", suggestionMinutes ) );
+                                    }
+                                    else
+                                    {
+                                        hipChatClient.SendMessage( "I will stop sending you game suggestions now." );
+                                        lastSuggestion = DateTime.MaxValue;
+                                    }
                                     break;
 
                                 default:

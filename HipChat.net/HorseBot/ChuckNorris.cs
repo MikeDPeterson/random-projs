@@ -20,6 +20,10 @@ namespace HorseBot
             {
                 requestUri += string.Format( "&firstName={0}&lastName={1}", nameParts[0], nameParts[1] );
             }
+            else if ( nameParts.Length == 1)
+            {
+                requestUri += string.Format( "&firstName={0}&lastName={1}", nameParts[0], " " );
+            }
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create( requestUri );
             

@@ -17,11 +17,10 @@ namespace HorseBot
         const string apiToken = ourToken;
 
         // rooms
-        const int roomOfDoomId = 222901;
+        const int nerdHallRoomId = 222901;
         const int debugRoomId = 284955;
-        const int designersRoomId = 187059;
 
-        const int currentRoomId = roomOfDoomId;
+        const int currentRoomId = nerdHallRoomId;
 
         const string botName = "HorseBot";
         HipChatClient hipChatClient = null;
@@ -633,19 +632,23 @@ namespace HorseBot
                                 case MessageCategory.ChuckNorris:
                                     {
                                         ChuckNorris chuckNorris = new ChuckNorris();
+                                        string message;
+                                        string[] messageParts = messageItem.Text.Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
                                         if ( messageItem.Text.EndsWith( "~" ) )
                                         {
-                                            hipChatClient.SendMessage( chuckNorris.GetRandom( messageItem.From.Name ) );
+                                            message = chuckNorris.GetRandom( messageItem.From.Name );
                                         }
-                                        else if ( messageItem.Text.EndsWith( ")" ) )
+                                        else if ( messageParts.Length > 1 )
                                         {
-                                            string result = Regex.Match( messageItem.Text, @"\(([^)]*)\)" ).Groups[1].Value;
-                                            hipChatClient.SendMessage( chuckNorris.GetRandom( result ) );
+                                            string result = messageItem.Text.Remove( 0, "Chuck Norris".Length );
+                                            message = chuckNorris.GetRandom( result );
                                         }
                                         else
                                         {
-                                            hipChatClient.SendMessage( chuckNorris.GetRandom( string.Empty ) );
+                                            message = chuckNorris.GetRandom( string.Empty );
                                         }
+
+                                        hipChatClient.SendMessageHtml( message );
                                     }
 
                                     break;
