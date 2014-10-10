@@ -15,8 +15,14 @@ namespace SuggestionBot
         /// <param name="args">The args.</param>
         static void Main( string[] args )
         {
+            const int nerdHallRoomId = 222901;
+            const int debugRoomId = 284955;
+            const int nerdClosetRoomId = 597790;
+
+            const int currentRoomId = nerdClosetRoomId;
+            
             // HipChat initialization
-            HipChatClient hipChatClient = new HipChatClient( "54f19307e4626c9578d9dcb267ea19", 222901, "SuggestionBot" );
+            HipChatClient hipChatClient = new HipChatClient( "54f19307e4626c9578d9dcb267ea19", currentRoomId, "SuggestionBot" );
             DateTime startupDateTime = DateTime.Now;
             CommandDatabase commands = new CommandDatabase();
             Nouns _nouns = new Nouns();
@@ -36,13 +42,29 @@ namespace SuggestionBot
                     if ( ( DateTime.Now - lastSuggestion ).TotalMinutes >= suggestionMinutes )
                     {
                         int randomYear = new Random().Next( 2014, 2018 );
-                        if ( new Random().Next( 2 ) == 1 )
+                        int randomResponseType = new Random().Next( 1, 4 );
+                        if ( randomResponseType == 1 )
                         {
-                            hipChatClient.SendMessage( _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString() );
+                            hipChatClient.SendMessage( "Lunch Suggestion: " + _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun());
                         }
-                        else
+                        else if (randomResponseType == 2)
                         {
-                            hipChatClient.SendMessage( "Chuck Norris (" + _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + ")" );
+                            int randomNounCount = new Random().Next( 3 ) + 1;
+                            string nounsList = string.Empty;
+                            for ( int i = 0; i <= randomNounCount; i++ )
+                            {
+                                nounsList += " " + _nouns.GetRandomNoun() + ",";
+                            }
+
+                            hipChatClient.SendMessage( "Pizza Topping suggestions: " + nounsList.TrimEnd(',') );
+                        }
+                        else if ( randomResponseType == 3 )
+                        {
+                            hipChatClient.SendMessage( "Sammich Suggestion: " + _nouns.GetRandomNoun() + " and " + _nouns.GetRandomNoun() + ", smothered with " + _nouns.GetRandomNoun() );
+                        }
+                        else 
+                        {
+                            hipChatClient.SendMessage( "Game Suggestion: " + _nouns.GetRandomNoun() + " " + _nouns.GetRandomNoun() + " Simulator " + randomYear.ToString() );
                         }
 
                         lastSuggestion = DateTime.Now;

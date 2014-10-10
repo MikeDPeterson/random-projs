@@ -19,8 +19,9 @@ namespace HorseBot
         // rooms
         const int nerdHallRoomId = 222901;
         const int debugRoomId = 284955;
+        const int nerdClosetRoomId = 597790;
 
-        const int currentRoomId = nerdHallRoomId;
+        const int currentRoomId = nerdClosetRoomId;
 
         const string botName = "HorseBot";
         HipChatClient hipChatClient = null;
@@ -220,7 +221,7 @@ namespace HorseBot
                 return MessageCategory.Define;
             }
 
-            if ( message.StartsWith( "Weather ", StringComparison.OrdinalIgnoreCase ) )
+            if ( message.StartsWith( "Weather ", StringComparison.OrdinalIgnoreCase ) || message.Equals( "Weather", StringComparison.OrdinalIgnoreCase ) )
             {
                 return MessageCategory.Weather;
             }
@@ -606,7 +607,16 @@ namespace HorseBot
 
                                 case MessageCategory.Weather:
                                     {
-                                        string term = messageItem.Text.Substring( "Weather ".Length ).Trim();
+                                        string term = "85383";
+                                        if ( !messageItem.Text.Equals( "weather", StringComparison.OrdinalIgnoreCase ) )
+                                        {
+                                            term = messageItem.Text.Substring( "Weather ".Length ).Trim();
+                                        }
+
+                                        if ( string.IsNullOrWhiteSpace( term ) )
+                                        {
+                                            term = "85383";
+                                        }
 
                                         if ( !string.IsNullOrWhiteSpace( term ) )
                                         {
